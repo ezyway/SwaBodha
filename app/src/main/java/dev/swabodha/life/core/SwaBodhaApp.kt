@@ -5,6 +5,7 @@ import dev.swabodha.life.core.features.registry.FeatureRegistry
 import dev.swabodha.life.features.water.WaterFeatureEntry
 
 import dev.swabodha.life.core.database.DatabaseInitializer
+import dev.swabodha.life.core.features.todo.TodoFeatureEntry
 import dev.swabodha.life.features.weight.WeightFeatureEntry
 
 class SwabodhaApp : Application() {
@@ -17,6 +18,6 @@ class SwabodhaApp : Application() {
         // FeatureRegistry.register(FinanceFeatureEntry())
         FeatureRegistry.register(WaterFeatureEntry())
         FeatureRegistry.register(WeightFeatureEntry())
-
+        FeatureRegistry.register(TodoFeatureEntry())
     }
 }
