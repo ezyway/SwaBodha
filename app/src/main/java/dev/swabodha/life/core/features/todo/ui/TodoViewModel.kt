@@ -4,6 +4,7 @@ package dev.swabodha.life.core.features.todo.ui
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.swabodha.life.core.features.todo.data.entity.TodoEntity
 import dev.swabodha.life.core.features.todo.data.repository.TodoRepository
 import dev.swabodha.life.core.reminders.Reminder
 import dev.swabodha.life.core.reminders.ReminderScheduler
@@ -47,5 +48,12 @@ class TodoViewModel(
             }
         }
     }
+
+    fun delete(context: Context, todo: TodoEntity) {
+        viewModelScope.launch {
+            repo.delete(todo, context)
+        }
+    }
+
 
 }

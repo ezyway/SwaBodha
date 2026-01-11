@@ -15,4 +15,8 @@ interface TodoDao {
 
     @Query("SELECT * FROM todos ORDER BY createdAt DESC")
     fun observeAll(): Flow<List<TodoEntity>>
+
+    @Query("DELETE FROM todos WHERE id = :id")
+    suspend fun deleteById(id: String)
+
 }

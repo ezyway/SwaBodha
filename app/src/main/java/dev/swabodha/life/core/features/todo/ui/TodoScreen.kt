@@ -183,8 +183,7 @@ fun TodoScreen(
                         }
 
                         IconButton(
-                            onClick = { /* TODO: implement remove */ },
-                            enabled = false
+                            onClick = { vm.delete(context, todo) }
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.Delete,
