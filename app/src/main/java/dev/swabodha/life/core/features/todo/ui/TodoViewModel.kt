@@ -67,4 +67,10 @@ class TodoViewModel(
         }
     }
 
+    fun update(context: Context, todo: TodoEntity) {
+        viewModelScope.launch {
+            repo.update(context, todo)
+        }
+    }
+
 }

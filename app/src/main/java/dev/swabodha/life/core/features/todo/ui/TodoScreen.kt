@@ -3,6 +3,8 @@ package dev.swabodha.life.core.features.todo.ui
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -10,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Alarm
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.ListAlt
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import dev.swabodha.life.core.features.todo.data.entity.TodoEntity
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -30,6 +34,7 @@ fun TodoScreen(
     val context = LocalContext.current
     val todos by vm.todos.collectAsState()
 
+    var editingTodo by remember { mutableStateOf<TodoEntity?>(null) }
     var text by remember { mutableStateOf("") }
     var reminderAt by remember { mutableStateOf<Long?>(null) }
 
@@ -38,6 +43,28 @@ fun TodoScreen(
 
     val dateFormatter = remember {
         SimpleDateFormat("EEE, dd MMM • hh:mm a", Locale.getDefault())
+    }
+
+    fun pickDateTime(onPicked: (Long) -> Unit) {
+        val cal = Calendar.getInstance()
+        DatePickerDialog(
+            context,
+            { _, y, m, d ->
+                TimePickerDialog(
+                    context,
+                    { _, h, min ->
+                        cal.set(y, m, d, h, min)
+                        onPicked(cal.timeInMillis)
+                    },
+                    cal.get(Calendar.HOUR_OF_DAY),
+                    cal.get(Calendar.MINUTE),
+                    false
+                ).show()
+            },
+            cal.get(Calendar.YEAR),
+            cal.get(Calendar.MONTH),
+            cal.get(Calendar.DAY_OF_MONTH)
+        ).show()
     }
 
     Scaffold(
@@ -79,7 +106,7 @@ fun TodoScreen(
 
             item { Divider() }
 
-            /* ===== Input Section ===== */
+            /* ===== Add / Edit Section ===== */
             item {
                 Column(
                     modifier = Modifier
@@ -89,7 +116,9 @@ fun TodoScreen(
                     OutlinedTextField(
                         value = text,
                         onValueChange = { text = it },
-                        label = { Text("Todo") },
+                        label = {
+                            Text(if (editingTodo == null) "Todo" else "Edit todo")
+                        },
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -98,25 +127,7 @@ fun TodoScreen(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Button(
                             onClick = {
-                                val cal = Calendar.getInstance()
-                                DatePickerDialog(
-                                    context,
-                                    { _, y, m, d ->
-                                        TimePickerDialog(
-                                            context,
-                                            { _, h, min ->
-                                                cal.set(y, m, d, h, min)
-                                                reminderAt = cal.timeInMillis
-                                            },
-                                            cal.get(Calendar.HOUR_OF_DAY),
-                                            cal.get(Calendar.MINUTE),
-                                            false
-                                        ).show()
-                                    },
-                                    cal.get(Calendar.YEAR),
-                                    cal.get(Calendar.MONTH),
-                                    cal.get(Calendar.DAY_OF_MONTH)
-                                ).show()
+                                pickDateTime { reminderAt = it }
                             }
                         ) {
                             Icon(Icons.Outlined.Alarm, contentDescription = null)
@@ -127,11 +138,22 @@ fun TodoScreen(
                         Spacer(Modifier.width(12.dp))
 
                         AnimatedVisibility(visible = reminderAt != null) {
-                            Text(
-                                text = reminderAt?.let { dateFormatter.format(Date(it)) } ?: "",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = reminderAt?.let {
+                                        dateFormatter.format(Date(it))
+                                    } ?: "",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+
+                                IconButton(onClick = { reminderAt = null }) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Close,
+                                        contentDescription = "Remove reminder"
+                                    )
+                                }
+                            }
                         }
                     }
 
@@ -140,18 +162,26 @@ fun TodoScreen(
                     Button(
                         modifier = Modifier.fillMaxWidth(),
                         onClick = {
-                            if (text.isNotBlank()) {
-                                vm.add(
-                                    context = context,
-                                    text = text,
-                                    reminderAt = reminderAt
+                            if (text.isBlank()) return@Button
+
+                            if (editingTodo == null) {
+                                vm.add(context, text, reminderAt)
+                            } else {
+                                vm.update(
+                                    context,
+                                    editingTodo!!.copy(
+                                        text = text,
+                                        reminderAt = reminderAt
+                                    )
                                 )
-                                text = ""
-                                reminderAt = null
                             }
+
+                            text = ""
+                            reminderAt = null
+                            editingTodo = null
                         }
                     ) {
-                        Text("Add todo")
+                        Text(if (editingTodo == null) "Add todo" else "Save changes")
                     }
                 }
             }
@@ -163,9 +193,18 @@ fun TodoScreen(
                 Card(
                     modifier = Modifier
                         .padding(horizontal = 24.dp, vertical = 8.dp)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            editingTodo = todo
+                            text = todo.text
+                            reminderAt = todo.reminderAt
+                        },
                     shape = MaterialTheme.shapes.medium
-                ) {
+                )
+                {
                     Row(
                         modifier = Modifier
                             .padding(16.dp)

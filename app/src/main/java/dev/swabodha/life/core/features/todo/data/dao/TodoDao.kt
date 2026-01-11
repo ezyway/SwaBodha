@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import dev.swabodha.life.core.features.todo.data.entity.TodoEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -21,5 +22,8 @@ interface TodoDao {
 
     @Query("UPDATE todos SET completed = :completed WHERE id = :id")
     suspend fun setCompleted(id: String, completed: Boolean)
+
+    @Update
+    suspend fun update(todo: TodoEntity)
 
 }

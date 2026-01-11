@@ -72,4 +72,29 @@ class TodoRepository {
         }
     }
 
+    suspend fun update(context: Context, todo: TodoEntity) {
+        dao.update(todo)
+
+        // Cancel old reminder
+        ReminderScheduler.cancel(
+            context,
+            "todo_${todo.id}"
+        )
+
+        // Reschedule if needed
+        if (todo.reminderAt != null && !todo.completed) {
+            ReminderScheduler.scheduleAt(
+                context = context,
+                reminder = Reminder(
+                    id = "todo_${todo.id}",
+                    title = "Todo",
+                    message = todo.text,
+                    hour = 0,
+                    minute = 0
+                ),
+                triggerAtMillis = todo.reminderAt
+            )
+        }
+    }
+
 }
