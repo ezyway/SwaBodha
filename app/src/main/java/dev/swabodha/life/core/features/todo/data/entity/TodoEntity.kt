@@ -9,5 +9,6 @@ data class TodoEntity(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
     val text: String,
     val reminderAt: Long?, // null = no reminder
+    val completed: Boolean = false,
     val createdAt: Long
 )

@@ -19,4 +19,7 @@ interface TodoDao {
     @Query("DELETE FROM todos WHERE id = :id")
     suspend fun deleteById(id: String)
 
+    @Query("UPDATE todos SET completed = :completed WHERE id = :id")
+    suspend fun setCompleted(id: String, completed: Boolean)
+
 }

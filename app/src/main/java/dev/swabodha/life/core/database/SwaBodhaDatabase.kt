@@ -23,7 +23,7 @@ import dev.swabodha.life.core.features.todo.data.dao.TodoDao
 
     ],
 
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 

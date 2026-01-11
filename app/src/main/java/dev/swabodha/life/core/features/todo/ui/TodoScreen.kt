@@ -172,23 +172,46 @@ fun TodoScreen(
                             .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Column(Modifier.weight(1f)) {
-                            Text(
-                                text = todo.text,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Medium
+
+                        // ✔ Completed checkbox + content
+                        Row(
+                            modifier = Modifier.weight(1f),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Checkbox(
+                                checked = todo.completed,
+                                onCheckedChange = {
+                                    vm.toggleCompleted(context, todo)
+                                }
                             )
 
-                            todo.reminderAt?.let {
-                                Spacer(Modifier.height(4.dp))
+                            Spacer(Modifier.width(8.dp))
+
+                            Column {
                                 Text(
-                                    text = dateFormatter.format(Date(it)),
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    text = todo.text,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Medium,
+                                    color = if (todo.completed)
+                                        MaterialTheme.colorScheme.onSurfaceVariant
+                                    else
+                                        MaterialTheme.colorScheme.onSurface
                                 )
+
+                                todo.reminderAt?.let {
+                                    if (!todo.completed) {
+                                        Spacer(Modifier.height(4.dp))
+                                        Text(
+                                            text = dateFormatter.format(Date(it)),
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                }
                             }
                         }
 
+                        // 🗑 Delete with Undo
                         IconButton(
                             onClick = {
                                 vm.delete(context, todo)

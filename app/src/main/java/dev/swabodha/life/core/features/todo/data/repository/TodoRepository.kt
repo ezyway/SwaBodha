@@ -56,5 +56,20 @@ class TodoRepository {
         }
     }
 
+    suspend fun toggleCompleted(
+        context: Context,
+        todo: TodoEntity
+    ) {
+        val newCompleted = !todo.completed
+        dao.setCompleted(todo.id, newCompleted)
+
+        // If marking completed → cancel reminder
+        if (newCompleted && todo.reminderAt != null) {
+            ReminderScheduler.cancel(
+                context,
+                "todo_${todo.id}"
+            )
+        }
+    }
 
 }

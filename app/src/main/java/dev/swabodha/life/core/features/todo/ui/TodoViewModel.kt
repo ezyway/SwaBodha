@@ -60,4 +60,11 @@ class TodoViewModel(
             repo.restore(todo, context)
         }
     }
+
+    fun toggleCompleted(context: Context, todo: TodoEntity) {
+        viewModelScope.launch {
+            repo.toggleCompleted(context, todo)
+        }
+    }
+
 }
