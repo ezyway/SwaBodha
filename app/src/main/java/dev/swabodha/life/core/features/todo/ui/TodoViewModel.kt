@@ -55,5 +55,9 @@ class TodoViewModel(
         }
     }
 
-
+    fun restore(context: Context, todo: TodoEntity) {
+        viewModelScope.launch {
+            repo.restore(todo, context)
+        }
+    }
 }

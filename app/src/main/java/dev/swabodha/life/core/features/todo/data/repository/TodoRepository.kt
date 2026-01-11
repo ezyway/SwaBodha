@@ -4,6 +4,7 @@ import android.content.Context
 import dev.swabodha.life.core.database.DatabaseInitializer
 import dev.swabodha.life.core.reminders.ReminderScheduler
 import dev.swabodha.life.core.features.todo.data.entity.TodoEntity
+import dev.swabodha.life.core.reminders.Reminder
 
 class TodoRepository {
 
@@ -36,5 +37,24 @@ class TodoRepository {
             )
         }
     }
+
+    suspend fun restore(todo: TodoEntity, context: Context) {
+        dao.insert(todo)
+
+        if (todo.reminderAt != null) {
+            ReminderScheduler.scheduleAt(
+                context = context,
+                reminder = Reminder(
+                    id = "todo_${todo.id}",
+                    title = "Todo",
+                    message = todo.text,
+                    hour = 0,
+                    minute = 0
+                ),
+                triggerAtMillis = todo.reminderAt
+            )
+        }
+    }
+
 
 }

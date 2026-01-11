@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -32,18 +33,24 @@ fun TodoScreen(
     var text by remember { mutableStateOf("") }
     var reminderAt by remember { mutableStateOf<Long?>(null) }
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
     val dateFormatter = remember {
         SimpleDateFormat("EEE, dd MMM • hh:mm a", Locale.getDefault())
     }
 
-    Scaffold { padding ->
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { padding ->
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
         ) {
 
-            // ===== Header =====
+            /* ===== Header ===== */
             item {
                 Column(Modifier.padding(24.dp)) {
                     Icon(
@@ -72,7 +79,7 @@ fun TodoScreen(
 
             item { Divider() }
 
-            // ===== Input Section =====
+            /* ===== Input Section ===== */
             item {
                 Column(
                     modifier = Modifier
@@ -151,7 +158,7 @@ fun TodoScreen(
 
             item { Divider() }
 
-            // ===== Todo List =====
+            /* ===== Todo List ===== */
             items(todos) { todo ->
                 Card(
                     modifier = Modifier
@@ -183,7 +190,21 @@ fun TodoScreen(
                         }
 
                         IconButton(
-                            onClick = { vm.delete(context, todo) }
+                            onClick = {
+                                vm.delete(context, todo)
+
+                                scope.launch {
+                                    val result = snackbarHostState.showSnackbar(
+                                        message = "Todo deleted",
+                                        actionLabel = "Undo",
+                                        duration = SnackbarDuration.Short
+                                    )
+
+                                    if (result == SnackbarResult.ActionPerformed) {
+                                        vm.restore(context, todo)
+                                    }
+                                }
+                            }
                         ) {
                             Icon(
                                 imageVector = Icons.Outlined.Delete,
