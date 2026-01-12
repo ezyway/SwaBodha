@@ -1,9 +1,9 @@
-package dev.swabodha.life.core.features.todo.data.repository
+package dev.swabodha.life.features.todo.data.repository
 
 import android.content.Context
 import dev.swabodha.life.core.database.DatabaseInitializer
 import dev.swabodha.life.core.reminders.ReminderScheduler
-import dev.swabodha.life.core.features.todo.data.entity.TodoEntity
+import dev.swabodha.life.features.todo.data.entity.TodoEntity
 import dev.swabodha.life.core.reminders.Reminder
 
 class TodoRepository {

@@ -1,4 +1,4 @@
-package dev.swabodha.life.core.features.todo.ui
+package dev.swabodha.life.features.todo.ui
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -23,7 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import dev.swabodha.life.core.features.todo.data.entity.TodoEntity
+import dev.swabodha.life.features.todo.data.entity.TodoEntity
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*

@@ -1,4 +1,4 @@
-package dev.swabodha.life.core.features.todo.data.entity
+package dev.swabodha.life.features.todo.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

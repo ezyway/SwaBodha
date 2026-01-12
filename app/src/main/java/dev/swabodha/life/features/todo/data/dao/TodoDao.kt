@@ -1,11 +1,11 @@
-package dev.swabodha.life.core.features.todo.data.dao
+package dev.swabodha.life.features.todo.data.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import dev.swabodha.life.core.features.todo.data.entity.TodoEntity
+import dev.swabodha.life.features.todo.data.entity.TodoEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

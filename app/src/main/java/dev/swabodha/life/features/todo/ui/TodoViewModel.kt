@@ -1,11 +1,11 @@
-package dev.swabodha.life.core.features.todo.ui
+package dev.swabodha.life.features.todo.ui
 
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.swabodha.life.core.features.todo.data.entity.TodoEntity
-import dev.swabodha.life.core.features.todo.data.repository.TodoRepository
+import dev.swabodha.life.features.todo.data.entity.TodoEntity
+import dev.swabodha.life.features.todo.data.repository.TodoRepository
 import dev.swabodha.life.core.reminders.Reminder
 import dev.swabodha.life.core.reminders.ReminderScheduler
 import kotlinx.coroutines.flow.SharingStarted

@@ -1,23 +1,24 @@
-package dev.swabodha.life.core.features.todo
+package dev.swabodha.life.features.gym
 
+import android.R
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import dev.swabodha.life.core.features.FeatureDescriptor
 import dev.swabodha.life.core.features.FeatureEntry
-import dev.swabodha.life.core.features.todo.ui.TodoScreen
+import dev.swabodha.life.features.gym.ui.GymScreen
 
-class TodoFeatureEntry : FeatureEntry {
+class GymFeatureEntry : FeatureEntry {
 
     override fun descriptor() = FeatureDescriptor(
-        id = "todo",
-        title = "Todo",
-        iconRes = android.R.drawable.ic_menu_agenda,
-        route = "todo"
+        id = "gym",
+        title = "Gym",
+        iconRes = R.drawable.ic_menu_edit,
+        route = "gym"
     )
 
     override fun registerNavGraph(builder: NavGraphBuilder) {
-        builder.composable("todo") {
-            TodoScreen()
+        builder.composable("gym") {
+            GymScreen()
         }
     }
 }

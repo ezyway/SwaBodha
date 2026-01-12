@@ -1,5 +1,6 @@
 package dev.swabodha.life.features.water
 
+import android.R
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import dev.swabodha.life.core.features.FeatureDescriptor
@@ -11,7 +12,7 @@ class WaterFeatureEntry : FeatureEntry {
     override fun descriptor() = FeatureDescriptor(
         id = "water",
         title = "Water",
-        iconRes = android.R.drawable.ic_menu_gallery, // temp
+        iconRes = R.drawable.ic_menu_gallery, // temp
         route = "water"
     )
 

@@ -1,4 +1,4 @@
-package dev.swabodha.life.core.features.registry
+package dev.swabodha.life.features.registry
 
 import dev.swabodha.life.core.features.FeatureEntry
 
