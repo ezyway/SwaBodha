@@ -63,7 +63,13 @@ fun WeightScreen(
                 )
             }
 
-            Divider()
+            HorizontalDivider(
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .align(Alignment.CenterHorizontally),
+                thickness = 1.dp
+            )
+
 
             /* ===== Add Entry ===== */
             Column(

@@ -78,7 +78,17 @@ fun WaterScreen(
                 }
             }
 
-            item { Divider() }
+            item {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    HorizontalDivider(
+                        modifier = Modifier.fillMaxWidth(0.8f),
+                        thickness = 1.dp
+                    )
+                }
+            }
 
             // ===== Enable Switch =====
             item {
