@@ -3,7 +3,7 @@ package dev.swabodha.life.features.gym.data.entity
 enum class BodyPart {
     BICEPS,
     TRICEPS,
-    SHOULDER,
+    SHOULDERS,
     CHEST,
     BACK,
     LEGS,

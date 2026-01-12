@@ -35,7 +35,7 @@ import dev.swabodha.life.features.todo.data.dao.TodoDao
         SmokingEntryEntity::class
     ],
 
-    version = 7,
+    version = 8,
     exportSchema = false
 )
 
