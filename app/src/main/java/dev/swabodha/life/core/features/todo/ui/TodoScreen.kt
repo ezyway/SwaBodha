@@ -2,7 +2,10 @@ package dev.swabodha.life.core.features.todo.ui
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import androidx.compose.ui.graphics.Color
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -14,6 +17,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -31,9 +36,16 @@ fun TodoScreen(
     val context = LocalContext.current
     val todos by vm.todos.collectAsState()
 
+    val activeTodos = todos.filter { !it.completed }
+    val completedTodos = todos.filter { it.completed }
+
     var editingTodo by remember { mutableStateOf<TodoEntity?>(null) }
     var text by remember { mutableStateOf("") }
     var reminderAt by remember { mutableStateOf<Long?>(null) }
+
+    var addExpanded by remember { mutableStateOf(true) }
+    var activeExpanded by remember { mutableStateOf(false) }
+    var completedExpanded by remember { mutableStateOf(false) }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -46,6 +58,13 @@ fun TodoScreen(
         editingTodo = null
         text = ""
         reminderAt = null
+    }
+
+    fun startEdit(todo: TodoEntity) {
+        editingTodo = todo
+        text = todo.text
+        reminderAt = todo.reminderAt
+        addExpanded = true
     }
 
     fun pickDateTime(onPicked: (Long) -> Unit) {
@@ -70,6 +89,71 @@ fun TodoScreen(
         ).show()
     }
 
+    @Composable
+    fun SectionHeader(
+        title: String,
+        icon: ImageVector,
+        expanded: Boolean,
+        count: Int? = null,
+        containerColor: Color,
+        onToggle: () -> Unit
+    ) {
+        val rotation by animateFloatAsState(
+            targetValue = if (expanded) 180f else 0f,
+            label = "chevron"
+        )
+
+        Surface(
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 6.dp)
+                .fillMaxWidth()
+                .clickable(
+                    indication = LocalIndication.current,
+                    interactionSource = remember { MutableInteractionSource() },
+                    onClick = onToggle
+                ),
+            shape = MaterialTheme.shapes.large,
+            color = containerColor,
+            tonalElevation = if (expanded) 3.dp else 1.dp
+        ) {
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+
+                Spacer(Modifier.width(12.dp))
+
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
+
+                if (count != null) {
+                    Spacer(Modifier.width(8.dp))
+                    AssistChip(
+                        onClick = {},
+                        enabled = false,
+                        label = { Text(count.toString()) }
+                    )
+                }
+
+                Spacer(Modifier.weight(1f))
+
+                Icon(
+                    imageVector = Icons.Outlined.ExpandMore,
+                    contentDescription = null,
+                    modifier = Modifier.rotate(rotation)
+                )
+            }
+        }
+    }
+
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
@@ -81,7 +165,7 @@ fun TodoScreen(
             contentPadding = PaddingValues(bottom = 32.dp)
         ) {
 
-            /* ===== Header (UNCHANGED) ===== */
+            /* ===== Header ===== */
             item {
                 Column(Modifier.padding(24.dp)) {
                     Icon(
@@ -90,233 +174,253 @@ fun TodoScreen(
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(36.dp)
                     )
-
                     Spacer(Modifier.height(12.dp))
-
-                    Text(
-                        text = "Todos",
-                        style = MaterialTheme.typography.headlineSmall
-                    )
-
+                    Text("Todos", style = MaterialTheme.typography.headlineSmall)
                     Spacer(Modifier.height(4.dp))
-
                     Text(
-                        text = "Things you don’t want to forget.",
+                        "Things you don’t want to forget.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
 
-            /* ===== Add / Edit Card ===== */
             item {
-                Card(
+                Box(
                     modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth(),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Column(Modifier.padding(16.dp)) {
+                    HorizontalDivider(
+                        modifier = Modifier.fillMaxWidth(0.8f),
+                        thickness = 1.dp
+                    )
+                }
+            }
 
-                        /* ---- Edit Mode Banner ---- */
-                        AnimatedVisibility(editingTodo != null) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 12.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Edit,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                                Spacer(Modifier.width(8.dp))
-                                Text(
-                                    text = "Editing todo",
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                                Spacer(Modifier.weight(1f))
-                                TextButton(onClick = { clearEdit() }) {
-                                    Text("Cancel")
+
+            /* ===== Add / Edit ===== */
+            item {
+                SectionHeader(
+                    title = if (editingTodo == null) "Add Todo" else "Edit Todo",
+                    icon = Icons.Outlined.AddCircleOutline,
+                    expanded = addExpanded,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    onToggle = { addExpanded = !addExpanded }
+                )
+            }
+
+            item {
+                AnimatedVisibility(addExpanded) {
+                    Card(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        )
+                    ) {
+                        Column(Modifier.padding(16.dp)) {
+
+                            AnimatedVisibility(editingTodo != null) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        Icons.Outlined.Edit,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                    Spacer(Modifier.width(8.dp))
+                                    Text(
+                                        "Editing todo",
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                    Spacer(Modifier.weight(1f))
+                                    TextButton(onClick = { clearEdit() }) {
+                                        Text("Cancel")
+                                    }
                                 }
                             }
-                        }
 
-                        OutlinedTextField(
-                            value = text,
-                            onValueChange = { text = it },
-                            label = {
-                                Text(if (editingTodo == null) "New todo" else "Edit todo")
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-
-                        Spacer(Modifier.height(12.dp))
-
-                        /* ---- Reminder UX (safe, single chip) ---- */
-                        AnimatedVisibility(reminderAt == null) {
-                            AssistChip(
-                                onClick = { pickDateTime { reminderAt = it } },
-                                label = { Text("Set reminder") },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Outlined.Alarm,
-                                        contentDescription = null
-                                    )
-                                }
+                            OutlinedTextField(
+                                value = text,
+                                onValueChange = { text = it },
+                                label = {
+                                    Text(if (editingTodo == null) "New todo" else "Edit todo")
+                                },
+                                modifier = Modifier.fillMaxWidth()
                             )
-                        }
 
-                        AnimatedVisibility(reminderAt != null) {
+                            Spacer(Modifier.height(12.dp))
+
                             AssistChip(
                                 onClick = { pickDateTime { reminderAt = it } },
                                 label = {
                                     Text(
                                         reminderAt?.let {
                                             dateFormatter.format(Date(it))
-                                        } ?: ""
+                                        } ?: "Set reminder"
                                     )
                                 },
-                                trailingIcon = {
-                                    IconButton(
-                                        onClick = { reminderAt = null }
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Outlined.Close,
-                                            contentDescription = "Remove reminder"
+                                leadingIcon = {
+                                    Icon(Icons.Outlined.Alarm, null)
+                                }
+                            )
+
+                            Spacer(Modifier.height(16.dp))
+
+                            FilledTonalButton(
+                                modifier = Modifier.fillMaxWidth(),
+                                onClick = {
+                                    if (text.isBlank()) return@FilledTonalButton
+                                    if (editingTodo == null) {
+                                        vm.add(context, text, reminderAt)
+                                    } else {
+                                        vm.update(
+                                            context,
+                                            editingTodo!!.copy(
+                                                text = text,
+                                                reminderAt = reminderAt
+                                            )
                                         )
                                     }
-                                },
-                                colors = AssistChipDefaults.assistChipColors(
-                                    containerColor = MaterialTheme.colorScheme.secondaryContainer
-                                )
-                            )
-                        }
-
-                        Spacer(Modifier.height(16.dp))
-
-                        FilledTonalButton(
-                            modifier = Modifier.fillMaxWidth(),
-                            onClick = {
-                                if (text.isBlank()) return@FilledTonalButton
-
-                                if (editingTodo == null) {
-                                    vm.add(context, text, reminderAt)
-                                } else {
-                                    vm.update(
-                                        context,
-                                        editingTodo!!.copy(
-                                            text = text,
-                                            reminderAt = reminderAt
-                                        )
-                                    )
+                                    clearEdit()
                                 }
-
-                                clearEdit()
+                            ) {
+                                Text(if (editingTodo == null) "Add Todo" else "Save Changes")
                             }
-                        ) {
-                            Icon(
-                                imageVector = if (editingTodo == null)
-                                    Icons.Outlined.Add
-                                else
-                                    Icons.Outlined.Check,
-                                contentDescription = null
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text(if (editingTodo == null) "Add todo" else "Save changes")
                         }
                     }
                 }
             }
 
-            item { Spacer(Modifier.height(12.dp)) }
+            /* ===== Active ===== */
+            item {
+                SectionHeader(
+                    title = "Active",
+                    icon = Icons.Outlined.RadioButtonUnchecked,
+                    expanded = activeExpanded,
+                    count = activeTodos.size,
+                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    onToggle = { activeExpanded = !activeExpanded }
+                )
+            }
 
-            /* ===== Todo List ===== */
-            items(todos) { todo ->
-                Card(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 6.dp)
-                        .fillMaxWidth()
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null
-                        ) {
-                            editingTodo = todo
-                            text = todo.text
-                            reminderAt = todo.reminderAt
+            if (activeExpanded) {
+                items(activeTodos) { todo ->
+                    TodoItem(
+                        todo = todo,
+                        onEdit = { startEdit(todo) },
+                        onToggle = { vm.toggleCompleted(context, todo) },
+                        onDelete = {
+                            vm.delete(context, todo)
+                            scope.launch {
+                                val res = snackbarHostState.showSnackbar(
+                                    "Todo deleted",
+                                    "Undo"
+                                )
+                                if (res == SnackbarResult.ActionPerformed) {
+                                    vm.restore(context, todo)
+                                }
+                            }
                         },
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = if (todo.completed)
-                            MaterialTheme.colorScheme.surfaceVariant
-                        else
-                            MaterialTheme.colorScheme.surface
+                        dateFormatter = dateFormatter
                     )
-                ) {
-                    Row(
-                        modifier = Modifier.padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                }
+            }
 
-                        Checkbox(
-                            checked = todo.completed,
-                            onCheckedChange = {
-                                vm.toggleCompleted(context, todo)
-                            }
+            /* ===== Completed ===== */
+            item {
+                SectionHeader(
+                    title = "Completed",
+                    icon = Icons.Outlined.CheckCircleOutline,
+                    expanded = completedExpanded,
+                    count = completedTodos.size,
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    onToggle = { completedExpanded = !completedExpanded }
+                )
+            }
+
+            if (completedExpanded) {
+                items(completedTodos) { todo ->
+                    TodoItem(
+                        todo = todo,
+                        onEdit = { startEdit(todo) },
+                        onToggle = { vm.toggleCompleted(context, todo) },
+                        onDelete = { vm.delete(context, todo) },
+                        dateFormatter = dateFormatter
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun TodoItem(
+    todo: TodoEntity,
+    onEdit: () -> Unit,
+    onToggle: () -> Unit,
+    onDelete: () -> Unit,
+    dateFormatter: SimpleDateFormat
+) {
+    Card(
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 6.dp)
+            .fillMaxWidth()
+            .clickable(
+                indication = LocalIndication.current,
+                interactionSource = remember { MutableInteractionSource() },
+                onClick = onEdit
+            ),
+        colors = CardDefaults.cardColors(
+            containerColor = if (todo.completed)
+                MaterialTheme.colorScheme.surfaceVariant
+            else
+                MaterialTheme.colorScheme.surface
+        )
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Checkbox(
+                checked = todo.completed,
+                onCheckedChange = { onToggle() }
+            )
+
+            Spacer(Modifier.width(12.dp))
+
+            Column(Modifier.weight(1f)) {
+                Text(
+                    todo.text,
+                    fontWeight = FontWeight.Medium,
+                    color = if (todo.completed)
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    else
+                        MaterialTheme.colorScheme.onSurface
+                )
+
+                todo.reminderAt?.let {
+                    if (!todo.completed) {
+                        Text(
+                            dateFormatter.format(Date(it)),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.primary
                         )
-
-                        Spacer(Modifier.width(12.dp))
-
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = todo.text,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Medium,
-                                color = if (todo.completed)
-                                    MaterialTheme.colorScheme.onSurfaceVariant
-                                else
-                                    MaterialTheme.colorScheme.onSurface
-                            )
-
-                            todo.reminderAt?.let {
-                                if (!todo.completed) {
-                                    Spacer(Modifier.height(4.dp))
-                                    Text(
-                                        text = dateFormatter.format(Date(it)),
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.primary
-                                    )
-                                }
-                            }
-                        }
-
-                        IconButton(
-                            onClick = {
-                                vm.delete(context, todo)
-
-                                scope.launch {
-                                    val result = snackbarHostState.showSnackbar(
-                                        message = "Todo deleted",
-                                        actionLabel = "Undo",
-                                        duration = SnackbarDuration.Short
-                                    )
-
-                                    if (result == SnackbarResult.ActionPerformed) {
-                                        vm.restore(context, todo)
-                                    }
-                                }
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.Delete,
-                                contentDescription = "Remove todo",
-                                tint = MaterialTheme.colorScheme.error
-                            )
-                        }
                     }
                 }
+            }
+
+            IconButton(onClick = onDelete) {
+                Icon(
+                    imageVector = Icons.Outlined.Delete,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.error
+                )
             }
         }
     }
