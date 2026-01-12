@@ -23,4 +23,8 @@ class WeightRepository {
             )
         )
     }
+
+    suspend fun removeWeight(entry: WeightEntryEntity) {
+        dao.delete(entry)
+    }
 }

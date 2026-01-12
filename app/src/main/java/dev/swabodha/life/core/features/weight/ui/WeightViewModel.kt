@@ -2,6 +2,7 @@ package dev.swabodha.life.features.weight.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.swabodha.life.features.weight.data.entity.WeightEntryEntity
 import dev.swabodha.life.features.weight.data.repository.WeightRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -25,6 +26,12 @@ class WeightViewModel(
     fun addWeight(weightKg: Float) {
         viewModelScope.launch {
             repository.addWeight(weightKg)
+        }
+    }
+
+    fun removeWeight(entry: WeightEntryEntity) {
+        viewModelScope.launch {
+            repository.removeWeight(entry)
         }
     }
 }

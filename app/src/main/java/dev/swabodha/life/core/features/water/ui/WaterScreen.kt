@@ -3,7 +3,9 @@ package dev.swabodha.life.features.water.ui
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.WaterDrop
 import androidx.compose.material3.*
@@ -76,7 +78,17 @@ fun WaterScreen(
                 }
             }
 
-            item { Divider() }
+            item {
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    HorizontalDivider(
+                        modifier = Modifier.fillMaxWidth(0.8f),
+                        thickness = 1.dp
+                    )
+                }
+            }
 
             // ===== Enable Switch =====
             item {
@@ -127,16 +139,13 @@ fun WaterScreen(
                 }
             }
 
-            // ===== Interval Grid (FlowRow) =====
+            // ===== Interval Grid (2 columns guaranteed) =====
             item {
                 AnimatedVisibility(visible = isEnabled) {
                     Column(
-                        modifier = Modifier.padding(
-                            start = 24.dp,
-                            end = 24.dp,
-                            top = 8.dp,
-                            bottom = 24.dp
-                        )
+                        modifier = Modifier
+                            .padding(horizontal = 24.dp, vertical = 12.dp)
+                            .fillMaxWidth()
                     ) {
                         Text(
                             text = "Reminder interval",
@@ -145,12 +154,13 @@ fun WaterScreen(
 
                         Spacer(Modifier.height(12.dp))
 
-                        FlowRow(
-                            maxItemsInEachRow = 2,
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2),
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                            modifier = Modifier.heightIn(max = 300.dp) // avoids infinite height
                         ) {
-                            WaterReminder.intervals.forEach { minutes ->
+                            items(WaterReminder.intervals) { minutes ->
                                 IntervalGridItem(
                                     minutes = minutes,
                                     selected = interval == minutes,
