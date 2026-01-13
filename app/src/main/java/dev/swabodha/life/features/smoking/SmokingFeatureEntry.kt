@@ -1,5 +1,7 @@
 package dev.swabodha.life.features.smoking
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.SmokingRooms
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import dev.swabodha.life.core.features.FeatureDescriptor
@@ -11,7 +13,7 @@ class SmokingFeatureEntry : FeatureEntry {
     override fun descriptor() = FeatureDescriptor(
         id = "smoking",
         title = "Smoking",
-        iconRes = android.R.drawable.ic_menu_close_clear_cancel,
+        icon = Icons.Outlined.SmokingRooms,
         route = "smoking"
     )
 

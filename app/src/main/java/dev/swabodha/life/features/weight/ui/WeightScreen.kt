@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.FitnessCenter
+import androidx.compose.material.icons.outlined.MonitorWeight
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -41,7 +42,7 @@ fun WeightScreen(
             /* ===== Header ===== */
             Column(Modifier.padding(24.dp)) {
                 Icon(
-                    imageVector = Icons.Outlined.FitnessCenter,
+                    imageVector = Icons.Outlined.MonitorWeight,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(36.dp)

@@ -1,6 +1,9 @@
 package dev.swabodha.life.features.weight
 
 import android.R
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.FitnessCenter
+import androidx.compose.material.icons.outlined.MonitorWeight
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import dev.swabodha.life.core.features.FeatureDescriptor
@@ -12,7 +15,7 @@ class WeightFeatureEntry : FeatureEntry {
     override fun descriptor() = FeatureDescriptor(
         id = "weight",
         title = "Weight",
-        iconRes = R.drawable.ic_menu_edit,
+        icon = Icons.Outlined.MonitorWeight,
         route = "weight"
     )
 
