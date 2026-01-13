@@ -42,4 +42,11 @@ class GymViewModel : ViewModel() {
             repo.insert(entry)
         }
     }
+
+    fun save(entry: GymEntryEntity) {
+        viewModelScope.launch {
+            repo.insert(entry)
+        }
+    }
+
 }

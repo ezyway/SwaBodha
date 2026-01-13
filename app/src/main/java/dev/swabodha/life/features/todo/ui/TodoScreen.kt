@@ -2,7 +2,6 @@ package dev.swabodha.life.features.todo.ui
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import androidx.compose.ui.graphics.Color
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.LocalIndication
@@ -18,10 +17,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.swabodha.life.features.todo.data.entity.TodoEntity
 import kotlinx.coroutines.launch
@@ -89,71 +89,6 @@ fun TodoScreen(
         ).show()
     }
 
-    @Composable
-    fun SectionHeader(
-        title: String,
-        icon: ImageVector,
-        expanded: Boolean,
-        count: Int? = null,
-        containerColor: Color,
-        onToggle: () -> Unit
-    ) {
-        val rotation by animateFloatAsState(
-            targetValue = if (expanded) 180f else 0f,
-            label = "chevron"
-        )
-
-        Surface(
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 6.dp)
-                .fillMaxWidth()
-                .clickable(
-                    indication = LocalIndication.current,
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = onToggle
-                ),
-            shape = MaterialTheme.shapes.large,
-            color = containerColor,
-            tonalElevation = if (expanded) 3.dp else 1.dp
-        ) {
-            Row(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
-                )
-
-                Spacer(Modifier.width(12.dp))
-
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
-
-                if (count != null) {
-                    Spacer(Modifier.width(8.dp))
-                    AssistChip(
-                        onClick = {},
-                        enabled = false,
-                        label = { Text(count.toString()) }
-                    )
-                }
-
-                Spacer(Modifier.weight(1f))
-
-                Icon(
-                    imageVector = Icons.Outlined.ExpandMore,
-                    contentDescription = null,
-                    modifier = Modifier.rotate(rotation)
-                )
-            }
-        }
-    }
-
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
@@ -169,14 +104,13 @@ fun TodoScreen(
             item {
                 Column(Modifier.padding(24.dp)) {
                     Icon(
-                        imageVector = Icons.Outlined.ListAlt,
-                        contentDescription = null,
+                        Icons.Outlined.ListAlt,
+                        null,
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(36.dp)
                     )
                     Spacer(Modifier.height(12.dp))
                     Text("Todos", style = MaterialTheme.typography.headlineSmall)
-                    Spacer(Modifier.height(4.dp))
                     Text(
                         "Things you don’t want to forget.",
                         style = MaterialTheme.typography.bodyMedium,
@@ -199,83 +133,63 @@ fun TodoScreen(
                 }
             }
 
-
-            /* ===== Add / Edit ===== */
+            /* ===== Add / Edit (FULL BACKGROUND) ===== */
             item {
-                SectionHeader(
-                    title = if (editingTodo == null) "Add Todo" else "Edit Todo",
-                    icon = Icons.Outlined.AddCircleOutline,
+                AddTodoSection(
                     expanded = addExpanded,
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    onToggle = { addExpanded = !addExpanded }
-                )
-            }
+                    editing = editingTodo != null,
+                    onToggle = { addExpanded = !addExpanded },
+                    onCancel = { clearEdit() }
+                ) {
 
-            item {
-                AnimatedVisibility(addExpanded) {
                     Card(
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .fillMaxWidth(),
                         colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.surface
                         )
                     ) {
                         Column(Modifier.padding(16.dp)) {
 
-                            AnimatedVisibility(editingTodo != null) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Icon(
-                                        Icons.Outlined.Edit,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                    Spacer(Modifier.width(8.dp))
-                                    Text(
-                                        "Editing todo",
-                                        color = MaterialTheme.colorScheme.primary
-                                    )
-                                    Spacer(Modifier.weight(1f))
-                                    TextButton(onClick = { clearEdit() }) {
-                                        Text("Cancel")
-                                    }
-                                }
-                            }
+                            Text("Todo", style = MaterialTheme.typography.titleMedium)
+                            Spacer(Modifier.height(8.dp))
 
                             OutlinedTextField(
                                 value = text,
                                 onValueChange = { text = it },
-                                label = {
-                                    Text(if (editingTodo == null) "New todo" else "Edit todo")
+                                placeholder = {
+                                    Text(
+                                        if (editingTodo == null)
+                                            "New todo"
+                                        else
+                                            "Edit todo"
+                                    )
                                 },
                                 modifier = Modifier.fillMaxWidth()
                             )
 
-                            Spacer(Modifier.height(12.dp))
+                            Spacer(Modifier.height(16.dp))
 
-                            AssistChip(
-                                onClick = { pickDateTime { reminderAt = it } },
-                                label = {
-                                    Text(
-                                        reminderAt?.let {
-                                            dateFormatter.format(Date(it))
-                                        } ?: "Set reminder"
-                                    )
-                                },
-                                leadingIcon = {
-                                    Icon(Icons.Outlined.Alarm, null)
-                                }
-                            )
+                            Text("Reminder", style = MaterialTheme.typography.titleMedium)
+                            Spacer(Modifier.height(8.dp))
+
+                            OutlinedButton(
+                                modifier = Modifier.fillMaxWidth(),
+                                onClick = { pickDateTime { reminderAt = it } }
+                            ) {
+                                Icon(Icons.Outlined.Alarm, null)
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    reminderAt?.let {
+                                        dateFormatter.format(Date(it))
+                                    } ?: "Set reminder"
+                                )
+                            }
 
                             Spacer(Modifier.height(16.dp))
 
                             FilledTonalButton(
                                 modifier = Modifier.fillMaxWidth(),
+                                enabled = text.isNotBlank(),
                                 onClick = {
-                                    if (text.isBlank()) return@FilledTonalButton
                                     if (editingTodo == null) {
                                         vm.add(context, text, reminderAt)
                                     } else {
@@ -290,10 +204,29 @@ fun TodoScreen(
                                     clearEdit()
                                 }
                             ) {
-                                Text(if (editingTodo == null) "Add Todo" else "Save Changes")
+                                Text(
+                                    if (editingTodo == null)
+                                        "Add Todo"
+                                    else
+                                        "Save Changes"
+                                )
                             }
                         }
                     }
+                }
+            }
+
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    HorizontalDivider(
+                        modifier = Modifier.fillMaxWidth(0.8f),
+                        thickness = 1.dp
+                    )
                 }
             }
 
@@ -359,6 +292,121 @@ fun TodoScreen(
     }
 }
 
+/* ===== Add Todo Section Container ===== */
+
+@Composable
+private fun AddTodoSection(
+    expanded: Boolean,
+    editing: Boolean,
+    onToggle: () -> Unit,
+    onCancel: () -> Unit,
+    content: @Composable () -> Unit
+) {
+    val rotation by animateFloatAsState(
+        if (expanded) 180f else 0f,
+        label = "chevron"
+    )
+
+    Surface(
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .fillMaxWidth(),
+        shape = MaterialTheme.shapes.large,
+        color = MaterialTheme.colorScheme.primaryContainer,
+        tonalElevation = 2.dp
+    ) {
+        Column(Modifier.padding(16.dp)) {
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(
+                        indication = LocalIndication.current,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = onToggle
+                    ),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(Icons.Outlined.AddCircleOutline, null)
+                Spacer(Modifier.width(12.dp))
+                Text(
+                    if (editing) "Edit Todo" else "Add Todo",
+                    fontWeight = FontWeight.SemiBold
+                )
+                Spacer(Modifier.weight(1f))
+                Icon(Icons.Outlined.ExpandMore, null, Modifier.rotate(rotation))
+            }
+
+            AnimatedVisibility(editing) {
+                Row(
+                    modifier = Modifier.padding(top = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(Icons.Outlined.Edit, null)
+                    Spacer(Modifier.width(8.dp))
+                    Text("Editing todo")
+                    Spacer(Modifier.weight(1f))
+                    TextButton(onClick = onCancel) {
+                        Text("Cancel")
+                    }
+                }
+            }
+
+            AnimatedVisibility(expanded) {
+                Column(Modifier.padding(top = 12.dp)) {
+                    content()
+                }
+            }
+        }
+    }
+}
+
+/* ===== Section Header & Item ===== */
+
+@Composable
+private fun SectionHeader(
+    title: String,
+    icon: ImageVector,
+    expanded: Boolean,
+    count: Int? = null,
+    containerColor: Color,
+    onToggle: () -> Unit
+) {
+    val rotation by animateFloatAsState(
+        if (expanded) 180f else 0f,
+        label = "chevron"
+    )
+
+    Surface(
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 6.dp)
+            .fillMaxWidth()
+            .clickable(
+                indication = LocalIndication.current,
+                interactionSource = remember { MutableInteractionSource() },
+                onClick = onToggle
+            ),
+        shape = MaterialTheme.shapes.large,
+        color = containerColor,
+        tonalElevation = if (expanded) 3.dp else 1.dp
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(icon, null, tint = MaterialTheme.colorScheme.primary)
+            Spacer(Modifier.width(12.dp))
+            Text(title, fontWeight = FontWeight.SemiBold)
+            count?.let {
+                Spacer(Modifier.width(8.dp))
+                AssistChip(onClick = {}, enabled = false, label = { Text(it.toString()) })
+            }
+            Spacer(Modifier.weight(1f))
+            Icon(Icons.Outlined.ExpandMore, null, Modifier.rotate(rotation))
+        }
+    }
+}
+
 @Composable
 private fun TodoItem(
     todo: TodoEntity,
@@ -387,40 +435,20 @@ private fun TodoItem(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Checkbox(
-                checked = todo.completed,
-                onCheckedChange = { onToggle() }
-            )
-
+            Checkbox(todo.completed, onCheckedChange = { onToggle() })
             Spacer(Modifier.width(12.dp))
-
             Column(Modifier.weight(1f)) {
-                Text(
-                    todo.text,
-                    fontWeight = FontWeight.Medium,
-                    color = if (todo.completed)
-                        MaterialTheme.colorScheme.onSurfaceVariant
-                    else
-                        MaterialTheme.colorScheme.onSurface
-                )
-
-                todo.reminderAt?.let {
-                    if (!todo.completed) {
-                        Text(
-                            dateFormatter.format(Date(it)),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
+                Text(todo.text, fontWeight = FontWeight.Medium)
+                todo.reminderAt?.takeIf { !todo.completed }?.let {
+                    Text(
+                        dateFormatter.format(Date(it)),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
             }
-
             IconButton(onClick = onDelete) {
-                Icon(
-                    imageVector = Icons.Outlined.Delete,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.error
-                )
+                Icon(Icons.Outlined.Delete, null, tint = MaterialTheme.colorScheme.error)
             }
         }
     }
