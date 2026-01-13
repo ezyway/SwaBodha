@@ -4,7 +4,6 @@ import dev.swabodha.life.core.database.DatabaseInitializer
 import dev.swabodha.life.features.gym.data.entity.BodyPart
 import dev.swabodha.life.features.gym.data.entity.GymEntryEntity
 import kotlinx.coroutines.flow.Flow
-import java.util.Calendar
 
 class GymRepository {
 
@@ -13,22 +12,21 @@ class GymRepository {
     fun observeEntries(): Flow<List<GymEntryEntity>> =
         dao.observeAll()
 
-    suspend fun logWorkout(parts: List<BodyPart>) {
-        val now = System.currentTimeMillis()
-        val dayStart = Calendar.getInstance().apply {
-            timeInMillis = now
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
-        }.timeInMillis
-
+    suspend fun logWorkoutAt(timeMillis: Long, parts: List<BodyPart>) {
         dao.insert(
             GymEntryEntity(
-                date = dayStart,
+                date = timeMillis,
                 bodyParts = parts,
-                createdAt = now
+                createdAt = System.currentTimeMillis()
             )
         )
+    }
+
+    suspend fun delete(entry: GymEntryEntity) {
+        dao.deleteById(entry.id)
+    }
+
+    suspend fun insert(entry: GymEntryEntity) {
+        dao.insert(entry)
     }
 }

@@ -13,6 +13,9 @@ interface GymDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entry: GymEntryEntity)
 
+    @Query("DELETE FROM gym_entries WHERE id = :id")
+    suspend fun deleteById(id: String)
+
     @Query("SELECT * FROM gym_entries ORDER BY date DESC")
     fun observeAll(): Flow<List<GymEntryEntity>>
 }
