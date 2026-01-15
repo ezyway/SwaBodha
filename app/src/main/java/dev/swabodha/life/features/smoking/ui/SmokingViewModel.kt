@@ -2,6 +2,7 @@ package dev.swabodha.life.features.smoking.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.swabodha.life.features.smoking.data.entity.SmokingEntryEntity
 import dev.swabodha.life.features.smoking.data.entity.SmokingSize
 import dev.swabodha.life.features.smoking.data.repository.SmokingRepository
 import kotlinx.coroutines.flow.SharingStarted
@@ -27,6 +28,18 @@ class SmokingViewModel(
     ) {
         viewModelScope.launch {
             repo.log(count, size, isMenthol)
+        }
+    }
+
+    fun remove(entry: SmokingEntryEntity) {
+        viewModelScope.launch {
+            repo.delete(entry)
+        }
+    }
+
+    fun restore(entry: SmokingEntryEntity) {
+        viewModelScope.launch {
+            repo.insert(entry)
         }
     }
 }

@@ -28,4 +28,12 @@ class SmokingRepository {
             )
         )
     }
+
+    suspend fun delete(entry: SmokingEntryEntity) {
+        dao.delete(entry)
+    }
+
+    suspend fun insert(entry: SmokingEntryEntity) {
+        dao.insert(entry)
+    }
 }

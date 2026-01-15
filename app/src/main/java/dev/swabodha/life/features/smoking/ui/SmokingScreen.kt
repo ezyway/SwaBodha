@@ -1,9 +1,15 @@
 package dev.swabodha.life.features.smoking.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.SmokingRooms
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -13,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import dev.swabodha.life.features.smoking.data.entity.SmokingEntryEntity
 import dev.swabodha.life.features.smoking.data.entity.SmokingSize
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -221,17 +228,75 @@ fun SmokingScreen(
                 }
             }
 
-            // ===== History =====
-            item {
-                Spacer(Modifier.height(24.dp))
-            }
+            /* ===== History ===== */
+            if (entries.isNotEmpty()) {
 
-            items(entries) { entry ->
-                Text(
-                    text = "${format(entry.timestamp)} → ${entry.count} × ${entry.size} (${if (entry.isMenthol) "menthol" else "regular"})",
-                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
-                    style = MaterialTheme.typography.bodySmall
-                )
+                item {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        HorizontalDivider(
+                            modifier = Modifier.fillMaxWidth(0.8f),
+                            thickness = 1.dp
+                        )
+                    }
+                }
+
+                item {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                start = 24.dp,
+                                end = 24.dp,
+                                top = 16.dp,
+                                bottom = 8.dp
+                            )
+                    ) {
+                        Text(
+                            text = "History",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Text(
+                            text = "Your previous smoking entries",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
+                items(
+                    items = entries,
+                    key = { it.id }
+                ) { entry ->
+                    AnimatedVisibility(
+                        visible = true,
+                        enter = fadeIn() + expandVertically(),
+                        exit = fadeOut() + shrinkVertically()
+                    ) {
+                        SmokingHistoryItem(
+                            entry = entry,
+                            onDelete = {
+                                vm.remove(entry)
+
+                                scope.launch {
+                                    val result = snackbarHostState.showSnackbar(
+                                        message = "Smoking entry removed",
+                                        actionLabel = "Undo",
+                                        withDismissAction = true,
+                                        duration = SnackbarDuration.Long
+                                    )
+
+                                    if (result == SnackbarResult.ActionPerformed) {
+                                        vm.restore(entry)
+                                    }
+                                }
+                            }
+                        )
+                    }
+                }
+
             }
         }
     }
@@ -265,3 +330,48 @@ private fun SizeChipFullWidth(
 
 private fun format(millis: Long): String =
     SimpleDateFormat("dd MMM HH:mm", Locale.getDefault()).format(Date(millis))
+
+@Composable
+private fun SmokingHistoryItem(
+    entry: SmokingEntryEntity,
+    onDelete: () -> Unit
+) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp, vertical = 6.dp),
+        tonalElevation = 1.dp,
+        shape = MaterialTheme.shapes.large
+    ) {
+        Row(
+            modifier = Modifier.padding(
+                horizontal = 16.dp,
+                vertical = 14.dp
+            ),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            val txt = "${entry.count} × ${entry.size.name.lowercase().replace("_", " ")}"
+            Column {
+                Text(
+//                    text = "${entry.count} × ${entry.size.name.lowercase().replace("_", " ")}",
+                    text = txt + if (entry.isMenthol) " • Menthol" else "",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                    text = format(entry.timestamp),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
+            IconButton(onClick = onDelete) {
+                Icon(
+                    imageVector = Icons.Outlined.Delete,
+                    contentDescription = "Delete entry",
+                    tint = MaterialTheme.colorScheme.error
+                )
+            }
+        }
+    }
+}
