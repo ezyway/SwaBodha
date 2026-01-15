@@ -2,7 +2,7 @@ package dev.swabodha.life.core
 
 import android.app.Application
 import dev.swabodha.life.core.database.DatabaseInitializer
-import dev.swabodha.life.features.registry.FeatureRegistry
+import dev.swabodha.life.features.FeatureRegistry
 
 import dev.swabodha.life.features.water.WaterFeatureEntry
 import dev.swabodha.life.features.gym.GymFeatureEntry
