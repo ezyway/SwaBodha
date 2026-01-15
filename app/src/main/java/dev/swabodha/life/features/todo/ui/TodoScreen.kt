@@ -418,40 +418,63 @@ private fun TodoItem(
     onDelete: () -> Unit,
     dateFormatter: SimpleDateFormat
 ) {
-    Card(
+    Surface(
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 6.dp)
             .fillMaxWidth()
+            .padding(horizontal = 24.dp, vertical = 6.dp)
             .clickable(
                 indication = LocalIndication.current,
                 interactionSource = remember { MutableInteractionSource() },
                 onClick = onEdit
             ),
-        colors = CardDefaults.cardColors(
-            containerColor = if (todo.completed)
-                MaterialTheme.colorScheme.surfaceVariant
-            else
-                MaterialTheme.colorScheme.surface
-        )
+        tonalElevation = 1.dp,
+        shape = MaterialTheme.shapes.large,
+        color = if (todo.completed)
+            MaterialTheme.colorScheme.surfaceVariant
+        else
+            MaterialTheme.colorScheme.surface
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Checkbox(todo.completed, onCheckedChange = { onToggle() })
-            Spacer(Modifier.width(12.dp))
-            Column(Modifier.weight(1f)) {
-                Text(todo.text, fontWeight = FontWeight.Medium)
-                todo.reminderAt?.takeIf { !todo.completed }?.let {
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(1f)
+            ) {
+                Checkbox(
+                    checked = todo.completed,
+                    onCheckedChange = { onToggle() }
+                )
+
+                Spacer(Modifier.width(12.dp))
+
+                Column {
                     Text(
-                        dateFormatter.format(Date(it)),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.primary
+                        text = todo.text,
+                        style = MaterialTheme.typography.bodyLarge
                     )
+
+                    todo.reminderAt
+                        ?.takeIf { !todo.completed }
+                        ?.let {
+                            Text(
+                                text = dateFormatter.format(Date(it)),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
                 }
             }
+
             IconButton(onClick = onDelete) {
-                Icon(Icons.Outlined.Delete, null, tint = MaterialTheme.colorScheme.error)
+                Icon(
+                    imageVector = Icons.Outlined.Delete,
+                    contentDescription = "Delete todo",
+                    tint = MaterialTheme.colorScheme.error
+                )
             }
         }
     }
