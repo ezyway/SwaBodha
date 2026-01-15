@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.FitnessCenter
 import androidx.compose.material.icons.outlined.MonitorWeight
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -126,7 +125,15 @@ fun WeightScreen(
             }
 
             if (state.entries.isNotEmpty()) {
-                Divider()
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    HorizontalDivider(
+                        modifier = Modifier.fillMaxWidth(0.8f),
+                        thickness = 1.dp
+                    )
+                }
 
                 /* ===== History Header ===== */
                 Column(
