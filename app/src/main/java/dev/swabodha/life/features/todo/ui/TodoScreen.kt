@@ -253,8 +253,10 @@ fun TodoScreen(
                             vm.delete(context, todo)
                             scope.launch {
                                 val res = snackbarHostState.showSnackbar(
-                                    "Todo deleted",
-                                    "Undo"
+                                    message = "Todo deleted",
+                                    actionLabel = "Undo",
+                                    withDismissAction = true,
+                                    duration = SnackbarDuration.Long
                                 )
                                 if (res == SnackbarResult.ActionPerformed) {
                                     vm.restore(context, todo)

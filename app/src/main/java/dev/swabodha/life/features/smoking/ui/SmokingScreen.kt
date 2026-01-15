@@ -207,7 +207,11 @@ fun SmokingScreen(
                             )
 
                             scope.launch {
-                                snackbarHostState.showSnackbar("Smoking logged")
+                                snackbarHostState.showSnackbar(
+                                    message = "Smoking logged",
+                                    withDismissAction = true,
+                                    duration = SnackbarDuration.Long
+                                )
                             }
                         },
                         modifier = Modifier.fillMaxWidth()

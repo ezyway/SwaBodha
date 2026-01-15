@@ -128,10 +128,12 @@ fun WaterScreen(
 
                             scope.launch {
                                 snackbarHostState.showSnackbar(
-                                    if (enabled)
+                                    message = if (enabled)
                                         "Water reminder enabled 💧"
                                     else
-                                        "Water reminder disabled"
+                                        "Water reminder disabled",
+                                    withDismissAction = true,
+                                    duration = SnackbarDuration.Long
                                 )
                             }
                         }

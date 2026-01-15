@@ -273,7 +273,10 @@ fun GymScreen(
                         vm.delete(entry)
                         scope.launch {
                             val res = snackbarHostState.showSnackbar(
-                                "Workout deleted", "Undo"
+                                message = "Workout deleted",
+                                actionLabel = "Undo",
+                                withDismissAction = true,
+                                duration = SnackbarDuration.Long
                             )
                             if (res == SnackbarResult.ActionPerformed) vm.save(entry)
                         }

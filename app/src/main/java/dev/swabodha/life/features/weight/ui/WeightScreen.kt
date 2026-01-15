@@ -172,7 +172,9 @@ fun WeightScreen(
                                     scope.launch {
                                         val result = snackbarHostState.showSnackbar(
                                             message = "Weight entry removed",
-                                            actionLabel = "UNDO"
+                                            actionLabel = "Undo",
+                                            withDismissAction = true,
+                                            duration = SnackbarDuration.Long
                                         )
 
                                         if (result == SnackbarResult.ActionPerformed) {
