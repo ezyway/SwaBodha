@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
-import dev.swabodha.life.features.registry.FeatureRegistry
+import dev.swabodha.life.features.FeatureRegistry
 import dev.swabodha.life.home.HomeScreen
 
 @Composable

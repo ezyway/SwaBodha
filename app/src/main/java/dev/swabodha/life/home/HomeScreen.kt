@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import dev.swabodha.life.features.registry.FeatureRegistry
+import dev.swabodha.life.features.FeatureRegistry
 import dev.swabodha.life.core.ui.components.FeatureTile
 import kotlinx.coroutines.delay
 import java.util.Calendar
