@@ -7,6 +7,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
 import dev.swabodha.life.features.FeatureRegistry
 import dev.swabodha.life.home.HomeScreen
+import dev.swabodha.life.settings.ui.SettingsScreen
+
 
 @Composable
 fun AppNavHost() {
@@ -23,5 +25,10 @@ fun AppNavHost() {
         FeatureRegistry.all().forEach {
             it.registerNavGraph(this)
         }
+
+        composable(Routes.SETTINGS) {
+            SettingsScreen()
+        }
+
     }
 }

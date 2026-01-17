@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import dev.swabodha.life.features.FeatureRegistry
 import dev.swabodha.life.core.ui.components.FeatureTile
+import dev.swabodha.life.navigation.Routes
 import kotlinx.coroutines.delay
 import java.util.Calendar
 
@@ -29,6 +31,7 @@ fun HomeScreen(navController: NavController) {
 
     val greeting = rememberGreeting()
     val headerTint = rememberTimeTint()
+
 
     Scaffold { padding ->
         Column(
@@ -50,6 +53,21 @@ fun HomeScreen(navController: NavController) {
                         )
                     )
             ) {
+                // Settings icon (top-right)
+                IconButton(
+                    onClick = { navController.navigate(Routes.SETTINGS) },
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(top = 12.dp, end = 12.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Settings,
+                        contentDescription = "Settings",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                // Header content
                 Column(
                     modifier = Modifier.padding(horizontal = 24.dp, vertical = 32.dp)
                 ) {
