@@ -22,7 +22,8 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    onNavigateToFeatureToggles: () -> Unit
+    onNavigateToFeatureToggles: () -> Unit,
+    onNavigateToReorderHomeTiles: () -> Unit
 ) {
     val headerTint = rememberTimeTint()
 
@@ -77,6 +78,21 @@ fun SettingsScreen(
                         .verticalScroll(rememberScrollState())
                         .padding(vertical = 12.dp)
                 ) {
+                    SettingsSection("Feature Controls") {
+                        SettingsItem(
+                            icon = Icons.Outlined.ToggleOn,
+                            title = "Enable / Disable features",
+                            subtitle = "Show or hide app features",
+                            onClick = onNavigateToFeatureToggles
+                        )
+
+                        SettingsItem(
+                            icon = Icons.Outlined.DragIndicator,
+                            title = "Reorder home tiles",
+                            subtitle = "Change feature order",
+                            onClick = onNavigateToReorderHomeTiles
+                        )
+                    }
 
                     SettingsSection("Account & Sync") {
                         SettingsItem(
@@ -147,21 +163,6 @@ fun SettingsScreen(
                             title = "Delete all local data",
                             subtitle = "This cannot be undone",
                             danger = true
-                        )
-                    }
-
-                    SettingsSection("Feature Controls") {
-                        SettingsItem(
-                            icon = Icons.Outlined.ToggleOn,
-                            title = "Enable / Disable features",
-                            subtitle = "Show or hide app features",
-                            onClick = onNavigateToFeatureToggles
-                        )
-
-                        SettingsItem(
-                            icon = Icons.Outlined.DragIndicator,
-                            title = "Reorder home tiles",
-                            subtitle = "Change feature order"
                         )
                     }
 
