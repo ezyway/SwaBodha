@@ -3,6 +3,7 @@ package dev.swabodha.life.features
 import android.content.Context
 import dev.swabodha.life.core.features.FeatureEntry
 import dev.swabodha.life.settings.data.FeaturePrefs
+import dev.swabodha.life.settings.data.HomeTileOrderPrefs
 
 object FeatureRegistry {
 
@@ -21,4 +22,15 @@ object FeatureRegistry {
                 FeaturePrefs(context).isEnabled(descriptor.id, descriptor.enabled)
             }
 
+    fun enabledDescriptorsOrdered(context: Context) =
+        run {
+            val enabled = enabledDescriptors(context)
+            val order = HomeTileOrderPrefs(context).getOrder()
+
+            val orderMap = order.withIndex().associate { it.value to it.index }
+
+            enabled.sortedWith(
+                compareBy { orderMap[it.id] ?: Int.MAX_VALUE }
+            )
+        }
 }

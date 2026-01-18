@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import dev.swabodha.life.features.FeatureRegistry
 import dev.swabodha.life.home.HomeScreen
 import dev.swabodha.life.settings.ui.FeatureToggleScreen
+import dev.swabodha.life.settings.ui.ReorderHomeTilesScreen
 import dev.swabodha.life.settings.ui.SettingsScreen
 
 
@@ -28,14 +29,24 @@ fun AppNavHost() {
         }
 
         composable(Routes.SETTINGS) {
-            SettingsScreen {
-                navController.navigate(Routes.FEATURE_TOGGLES)
-            }
+            SettingsScreen(
+                onNavigateToFeatureToggles = {
+                    navController.navigate(Routes.FEATURE_TOGGLES)
+                },
+                onNavigateToReorderHomeTiles = {
+                    navController.navigate(Routes.REORDER_HOME_TILES)
+                }
+            )
         }
+
 
         composable(Routes.FEATURE_TOGGLES) {
             FeatureToggleScreen()
         }
+        composable(Routes.REORDER_HOME_TILES) {
+            ReorderHomeTilesScreen(navController)
+        }
+
 
 
     }

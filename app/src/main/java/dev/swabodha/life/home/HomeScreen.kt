@@ -29,7 +29,9 @@ import java.util.Calendar
 @Composable
 fun HomeScreen(navController: NavController) {
     val context = LocalContext.current
-    val features = FeatureRegistry.enabledDescriptors(context)
+//    val features = FeatureRegistry.enabledDescriptors(context)
+
+    val features = FeatureRegistry.enabledDescriptorsOrdered(context)
 
     val greeting = rememberGreeting()
     val headerTint = rememberTimeTint()
