@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import dev.swabodha.life.features.FeatureRegistry
@@ -27,7 +28,8 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
-    val features = FeatureRegistry.enabledDescriptors()
+    val context = LocalContext.current
+    val features = FeatureRegistry.enabledDescriptors(context)
 
     val greeting = rememberGreeting()
     val headerTint = rememberTimeTint()

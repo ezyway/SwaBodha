@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
 import dev.swabodha.life.features.FeatureRegistry
 import dev.swabodha.life.home.HomeScreen
+import dev.swabodha.life.settings.ui.FeatureToggleScreen
 import dev.swabodha.life.settings.ui.SettingsScreen
 
 
@@ -27,8 +28,15 @@ fun AppNavHost() {
         }
 
         composable(Routes.SETTINGS) {
-            SettingsScreen()
+            SettingsScreen {
+                navController.navigate(Routes.FEATURE_TOGGLES)
+            }
         }
+
+        composable(Routes.FEATURE_TOGGLES) {
+            FeatureToggleScreen()
+        }
+
 
     }
 }

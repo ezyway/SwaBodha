@@ -1,6 +1,8 @@
 package dev.swabodha.life.settings.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -8,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -18,7 +21,9 @@ import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(
+    onNavigateToFeatureToggles: () -> Unit
+) {
     val headerTint = rememberTimeTint()
 
     Scaffold { padding ->
@@ -28,7 +33,7 @@ fun SettingsScreen() {
                 .padding(padding)
         ) {
 
-            // ===== Header (MATCHED WITH HOME) =====
+            // ===== Header =====
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -63,7 +68,7 @@ fun SettingsScreen() {
             Surface(
                 modifier = Modifier
                     .fillMaxSize()
-                    .offset(y = (-12).dp),
+                    .padding(top = (12).dp),
                 shape = MaterialTheme.shapes.extraLarge,
                 tonalElevation = 3.dp
             ) {
@@ -72,38 +77,132 @@ fun SettingsScreen() {
                         .verticalScroll(rememberScrollState())
                         .padding(vertical = 12.dp)
                 ) {
+
                     SettingsSection("Account & Sync") {
-                        SettingsItem(Icons.Outlined.Person, "Sign in / Sign out")
-                        SettingsItem(Icons.Outlined.Sync, "Sync status")
-                        SettingsItem(Icons.Outlined.Schedule, "Sync frequency")
-                        SettingsItem(Icons.Outlined.CloudSync, "Sync now")
-                        SettingsItem(Icons.Outlined.Devices, "Device list")
-                        SettingsItem(Icons.Outlined.Warning, "Reset cloud data", danger = true)
+                        SettingsItem(
+                            icon = Icons.Outlined.Person,
+                            title = "Sign in / Sign out",
+                            subtitle = "Manage your account"
+                        )
+
+                        SettingsItem(
+                            icon = Icons.Outlined.Sync,
+                            title = "Sync status",
+                            subtitle = "Last sync and errors"
+                        )
+
+                        SettingsItem(
+                            icon = Icons.Outlined.Schedule,
+                            title = "Sync frequency",
+                            subtitle = "How often data is synced"
+                        )
+
+                        SettingsItem(
+                            icon = Icons.Outlined.CloudSync,
+                            title = "Sync now",
+                            subtitle = "Force a manual sync"
+                        )
+
+                        SettingsItem(
+                            icon = Icons.Outlined.Devices,
+                            title = "Device list",
+                            subtitle = "Devices using this account"
+                        )
+
+                        SettingsItem(
+                            icon = Icons.Outlined.Warning,
+                            title = "Reset cloud data",
+                            subtitle = "Deletes all synced data",
+                            danger = true
+                        )
                     }
 
                     SettingsSection("Privacy & Security") {
-                        SettingsItem(Icons.Outlined.Lock, "App lock")
-                        SettingsItem(Icons.Outlined.Security, "Encrypted database")
-                        SettingsItem(Icons.Outlined.VisibilityOff, "Hide sensitive content")
-                        SettingsItem(Icons.Outlined.Block, "Screenshot protection")
-                        SettingsItem(Icons.Outlined.DeleteForever, "Delete all local data", danger = true)
+                        SettingsItem(
+                            icon = Icons.Outlined.Lock,
+                            title = "App lock",
+                            subtitle = "PIN / biometrics"
+                        )
+
+                        SettingsItem(
+                            icon = Icons.Outlined.Security,
+                            title = "Encrypted database",
+                            subtitle = "Local data protection"
+                        )
+
+                        SettingsItem(
+                            icon = Icons.Outlined.VisibilityOff,
+                            title = "Hide sensitive content",
+                            subtitle = "Blur previews and notifications"
+                        )
+
+                        SettingsItem(
+                            icon = Icons.Outlined.Block,
+                            title = "Screenshot protection",
+                            subtitle = "Prevent screenshots"
+                        )
+
+                        SettingsItem(
+                            icon = Icons.Outlined.DeleteForever,
+                            title = "Delete all local data",
+                            subtitle = "This cannot be undone",
+                            danger = true
+                        )
                     }
 
                     SettingsSection("Feature Controls") {
-                        SettingsItem(Icons.Outlined.ToggleOn, "Enable / Disable features")
-                        SettingsItem(Icons.Outlined.DragIndicator, "Reorder home tiles")
+                        SettingsItem(
+                            icon = Icons.Outlined.ToggleOn,
+                            title = "Enable / Disable features",
+                            subtitle = "Show or hide app features",
+                            onClick = onNavigateToFeatureToggles
+                        )
+
+                        SettingsItem(
+                            icon = Icons.Outlined.DragIndicator,
+                            title = "Reorder home tiles",
+                            subtitle = "Change feature order"
+                        )
                     }
 
                     SettingsSection("Appearance") {
-                        SettingsItem(Icons.Outlined.Palette, "Theme")
-                        SettingsItem(Icons.Outlined.Dashboard, "Home layout")
+                        SettingsItem(
+                            icon = Icons.Outlined.Palette,
+                            title = "Theme",
+                            subtitle = "Light / Dark / System"
+                        )
+
+                        SettingsItem(
+                            icon = Icons.Outlined.Dashboard,
+                            title = "Home layout",
+                            subtitle = "Grid and spacing"
+                        )
                     }
 
                     SettingsSection("About") {
-                        SettingsItem(Icons.Outlined.Info, "App version")
-                        SettingsItem(Icons.Outlined.Policy, "Privacy policy")
-                        SettingsItem(Icons.Outlined.Code, "Open-source licenses")
-                        SettingsItem(Icons.Outlined.Email, "Contact & feedback")
+                        SettingsItem(
+                            icon = Icons.Outlined.Info,
+                            title = "App version",
+                            subtitle = "Build and release info"
+                        )
+
+                        SettingsItem(
+                            icon = Icons.Outlined.Policy,
+                            title = "Privacy policy",
+                            subtitle = "How your data is handled"
+                        )
+
+                        SettingsItem(
+                            icon = Icons.Outlined.Code,
+                            title = "Open-source licenses",
+                            subtitle = "Libraries used"
+                        )
+
+                        SettingsItem(
+                            icon = Icons.Outlined.Email,
+                            title = "Contact & feedback",
+                            subtitle = "Report issues or suggest features"
+                        )
                     }
 
                     Spacer(Modifier.height(24.dp))
@@ -112,7 +211,6 @@ fun SettingsScreen() {
         }
     }
 }
-
 
 @Composable
 private fun SettingsSection(
@@ -134,17 +232,25 @@ private fun SettingsSection(
 private fun SettingsItem(
     icon: ImageVector,
     title: String,
-    danger: Boolean = false
+    subtitle: String? = null,
+    danger: Boolean = false,
+    onClick: () -> Unit = {}
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() },
+                onClick = onClick
+            )
+
             .padding(horizontal = 24.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = icon,
-            contentDescription = null,
+            contentDescription = title,
             tint = if (danger)
                 MaterialTheme.colorScheme.error
             else
@@ -153,14 +259,25 @@ private fun SettingsItem(
 
         Spacer(Modifier.width(16.dp))
 
-        Text(
-            text = title,
-            style = MaterialTheme.typography.bodyLarge,
-            color = if (danger)
-                MaterialTheme.colorScheme.error
-            else
-                MaterialTheme.colorScheme.onSurface
-        )
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyLarge,
+                color = if (danger)
+                    MaterialTheme.colorScheme.error
+                else
+                    MaterialTheme.colorScheme.onSurface
+            )
+
+            subtitle?.let {
+                Spacer(Modifier.height(2.dp))
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
     }
 }
 
