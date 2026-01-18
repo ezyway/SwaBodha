@@ -152,7 +152,7 @@ fun ReorderHomeTilesScreen(
                                     }
                                 }
                             ) {
-                                Text("Save & close")
+                                Text("Reorder")
                             }
                         }
 
