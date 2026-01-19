@@ -2,7 +2,7 @@ package dev.swabodha.life.settings.data
 
 import android.content.Context
 
-class FeaturePrefs(context: Context) {
+class FeatureTogglePrefs(context: Context) {
 
     private val prefs =
         context.getSharedPreferences("feature_prefs", Context.MODE_PRIVATE)

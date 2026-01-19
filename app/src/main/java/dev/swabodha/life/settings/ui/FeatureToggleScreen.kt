@@ -12,14 +12,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import dev.swabodha.life.features.FeatureRegistry
-import dev.swabodha.life.settings.data.FeaturePrefs
+import dev.swabodha.life.settings.data.FeatureTogglePrefs
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FeatureToggleScreen() {
     val context = LocalContext.current
-    val prefs = remember { FeaturePrefs(context) }
+    val prefs = remember { FeatureTogglePrefs(context) }
     val headerTint = rememberTimeTint()
 
     val features = remember {

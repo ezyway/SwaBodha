@@ -1,0 +1,121 @@
+kotlin version: 2.0.0
+error message: org.jetbrains.kotlin.backend.common.BackendException: Backend Internal error: Exception during IR lowering
+File being compiled: C:/Dev/Android/SwaBodha/app/src/main/java/dev/swabodha/life/settings/data/FeatureToggle.kt.kt
+The root cause java.lang.RuntimeException was thrown at: org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:50)
+	at org.jetbrains.kotlin.backend.common.CodegenUtil.reportBackendException(CodegenUtil.kt:253)
+	at org.jetbrains.kotlin.backend.common.CodegenUtil.reportBackendException$default(CodegenUtil.kt:236)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invokeSequential(performByIrFile.kt:65)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invoke(performByIrFile.kt:52)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invoke(performByIrFile.kt:38)
+	at org.jetbrains.kotlin.backend.common.phaser.NamedCompilerPhase.phaseBody(CompilerPhase.kt:166)
+	at org.jetbrains.kotlin.backend.common.phaser.AbstractNamedCompilerPhase.invoke(CompilerPhase.kt:113)
+	at org.jetbrains.kotlin.backend.common.phaser.CompositePhase.invoke(PhaseBuilders.kt:29)
+	at org.jetbrains.kotlin.backend.common.phaser.CompositePhase.invoke(PhaseBuilders.kt:16)
+	at org.jetbrains.kotlin.backend.common.phaser.NamedCompilerPhase.phaseBody(CompilerPhase.kt:166)
+	at org.jetbrains.kotlin.backend.common.phaser.AbstractNamedCompilerPhase.invoke(CompilerPhase.kt:113)
+	at org.jetbrains.kotlin.backend.common.phaser.CompilerPhaseKt.invokeToplevel(CompilerPhase.kt:62)
+	at org.jetbrains.kotlin.backend.jvm.JvmIrCodegenFactory.invokeCodegen(JvmIrCodegenFactory.kt:371)
+	at org.jetbrains.kotlin.codegen.CodegenFactory.generateModule(CodegenFactory.kt:47)
+	at org.jetbrains.kotlin.codegen.KotlinCodegenFacade.compileCorrectFiles(KotlinCodegenFacade.java:45)
+	at org.jetbrains.kotlin.kapt3.AbstractKapt3Extension.contextForStubGeneration(Kapt3Extension.kt:253)
+	at org.jetbrains.kotlin.kapt3.AbstractKapt3Extension.analysisCompleted(Kapt3Extension.kt:149)
+	at org.jetbrains.kotlin.kapt3.ClasspathBasedKapt3Extension.analysisCompleted(Kapt3Extension.kt:79)
+	at org.jetbrains.kotlin.cli.jvm.compiler.TopDownAnalyzerFacadeForJVM.analyzeFilesWithJavaIntegration$invokeExtensionsOnAnalysisComplete(TopDownAnalyzerFacadeForJVM.kt:104)
+	at org.jetbrains.kotlin.cli.jvm.compiler.TopDownAnalyzerFacadeForJVM.analyzeFilesWithJavaIntegration(TopDownAnalyzerFacadeForJVM.kt:114)
+	at org.jetbrains.kotlin.cli.jvm.compiler.TopDownAnalyzerFacadeForJVM.analyzeFilesWithJavaIntegration$default(TopDownAnalyzerFacadeForJVM.kt:75)
+	at org.jetbrains.kotlin.cli.jvm.compiler.KotlinToJVMBytecodeCompiler.analyze$lambda$12(KotlinToJVMBytecodeCompiler.kt:373)
+	at org.jetbrains.kotlin.cli.common.messages.AnalyzerWithCompilerReport.analyzeAndReport(AnalyzerWithCompilerReport.kt:115)
+	at org.jetbrains.kotlin.cli.jvm.compiler.KotlinToJVMBytecodeCompiler.analyze(KotlinToJVMBytecodeCompiler.kt:364)
+	at org.jetbrains.kotlin.cli.jvm.compiler.KotlinToJVMBytecodeCompiler.runFrontendAndGenerateIrUsingClassicFrontend(KotlinToJVMBytecodeCompiler.kt:195)
+	at org.jetbrains.kotlin.cli.jvm.compiler.KotlinToJVMBytecodeCompiler.compileModules$cli(KotlinToJVMBytecodeCompiler.kt:106)
+	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecute(K2JVMCompiler.kt:176)
+	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecute(K2JVMCompiler.kt:50)
+	at org.jetbrains.kotlin.cli.common.CLICompiler.execImpl(CLICompiler.kt:104)
+	at org.jetbrains.kotlin.cli.common.CLICompiler.execImpl(CLICompiler.kt:48)
+	at org.jetbrains.kotlin.cli.common.CLITool.exec(CLITool.kt:101)
+	at org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunner.runCompiler(IncrementalJvmCompilerRunner.kt:453)
+	at org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunner.runCompiler(IncrementalJvmCompilerRunner.kt:62)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.doCompile(IncrementalCompilerRunner.kt:506)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compileImpl(IncrementalCompilerRunner.kt:423)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.tryCompileIncrementally$lambda$9$compile(IncrementalCompilerRunner.kt:249)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.tryCompileIncrementally(IncrementalCompilerRunner.kt:267)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compile(IncrementalCompilerRunner.kt:120)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.execIncrementalCompiler(CompileServiceImpl.kt:676)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.access$execIncrementalCompiler(CompileServiceImpl.kt:92)
+	at org.jetbrains.kotlin.daemon.CompileServiceImpl.compile(CompileServiceImpl.kt:1661)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source)
+	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+	at java.rmi/sun.rmi.server.UnicastServerRef.dispatch(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Unknown Source)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport.serviceCall(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport.handleMessages(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(Unknown Source)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+Caused by: java.lang.RuntimeException: Exception while generating code for:
+FUN FUNCTION_FOR_DEFAULT_PARAMETER name:isEnabled$default visibility:public modality:FINAL <> ($this:dev.swabodha.life.settings.data.FeatureToggle.kt, featureId:kotlin.String, default:kotlin.Boolean, $mask0:kotlin.Int, $handler:kotlin.Any?) returnType:kotlin.Boolean
+  VALUE_PARAMETER MOVED_DISPATCH_RECEIVER name:$this index:0 type:dev.swabodha.life.settings.data.FeatureToggle.kt
+  VALUE_PARAMETER name:featureId index:1 type:kotlin.String
+  VALUE_PARAMETER name:default index:2 type:kotlin.Boolean [assignable]
+    EXPRESSION_BODY
+      ERROR_EXPR 'Default Stub' type=kotlin.Boolean
+  VALUE_PARAMETER MASK_FOR_DEFAULT_FUNCTION name:$mask0 index:3 type:kotlin.Int
+  VALUE_PARAMETER METHOD_HANDLER_IN_DEFAULT_FUNCTION name:$handler index:4 type:kotlin.Any?
+  BLOCK_BODY
+    WHEN type=kotlin.Unit origin=null
+      BRANCH
+        if: CALL 'public final fun not (): kotlin.Boolean [operator] declared in kotlin.Boolean' type=kotlin.Boolean origin=EXCLEQ
+          $this: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EXCLEQ
+            arg0: CALL 'public final fun and (other: kotlin.Int): kotlin.Int [infix] declared in kotlin.Int' type=kotlin.Int origin=null
+              $this: GET_VAR '$mask0: kotlin.Int declared in dev.swabodha.life.settings.data.FeatureToggle.kt.isEnabled$default' type=kotlin.Int origin=null
+              other: CONST Int type=kotlin.Int value=2
+            arg1: CONST Int type=kotlin.Int value=0
+        then: SET_VAR 'default: kotlin.Boolean [assignable] declared in dev.swabodha.life.settings.data.FeatureToggle.kt.isEnabled$default' type=kotlin.Unit origin=EQ
+          ERROR_EXPR 'KtConstantExpression' type=kotlin.Nothing
+    RETURN type=kotlin.Nothing from='public final fun isEnabled$default ($this: dev.swabodha.life.settings.data.FeatureToggle.kt, featureId: kotlin.String, default: kotlin.Boolean, $mask0: kotlin.Int, $handler: kotlin.Any?): kotlin.Boolean declared in dev.swabodha.life.settings.data.FeatureToggle.kt'
+      CALL 'public final fun isEnabled (featureId: kotlin.String, default: kotlin.Boolean): kotlin.Boolean declared in dev.swabodha.life.settings.data.FeatureToggle.kt' type=kotlin.Boolean origin=DEFAULT_STUB_CALL_TO_IMPLEMENTATION
+        $this: GET_VAR '$this: dev.swabodha.life.settings.data.FeatureToggle.kt declared in dev.swabodha.life.settings.data.FeatureToggle.kt.isEnabled$default' type=dev.swabodha.life.settings.data.FeatureToggle.kt origin=null
+        featureId: GET_VAR 'featureId: kotlin.String declared in dev.swabodha.life.settings.data.FeatureToggle.kt.isEnabled$default' type=kotlin.String origin=null
+        default: GET_VAR 'default: kotlin.Boolean [assignable] declared in dev.swabodha.life.settings.data.FeatureToggle.kt.isEnabled$default' type=kotlin.Boolean origin=null
+
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:50)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate$default(FunctionCodegen.kt:42)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generateMethodNode(ClassCodegen.kt:385)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generateMethod(ClassCodegen.kt:402)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generate(ClassCodegen.kt:169)
+	at org.jetbrains.kotlin.backend.jvm.FileCodegen.lower(JvmPhases.kt:41)
+	at org.jetbrains.kotlin.backend.common.phaser.PhaseBuildersKt.makeIrFilePhase$lambda$5(PhaseBuilders.kt:114)
+	at org.jetbrains.kotlin.backend.common.phaser.PhaseBuildersKt$createSimpleNamedCompilerPhase$1.phaseBody(PhaseBuilders.kt:71)
+	at org.jetbrains.kotlin.backend.common.phaser.SimpleNamedCompilerPhase.phaseBody(CompilerPhase.kt:226)
+	at org.jetbrains.kotlin.backend.common.phaser.AbstractNamedCompilerPhase.invoke(CompilerPhase.kt:113)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invokeSequential(performByIrFile.kt:62)
+	... 53 more
+Caused by: java.lang.IllegalArgumentException: Invalid class name (must not contain . ; [ < > or :): dev/swabodha/life/settings/data/FeatureToggle.kt
+	at org.jetbrains.org.objectweb.asm.util.CheckSignatureAdapter.checkClassName(CheckSignatureAdapter.java:343)
+	at org.jetbrains.org.objectweb.asm.util.CheckSignatureAdapter.visitClassType(CheckSignatureAdapter.java:285)
+	at org.jetbrains.kotlin.codegen.signature.BothSignatureWriter.writeClassBegin(BothSignatureWriter.java:78)
+	at org.jetbrains.kotlin.codegen.signature.JvmSignatureWriter.writeAsmType(JvmSignatureWriter.java:45)
+	at org.jetbrains.kotlin.codegen.signature.BothSignatureWriter.writeAsmType(BothSignatureWriter.java:72)
+	at org.jetbrains.kotlin.backend.jvm.mapping.IrTypeMapper.writeGenericType(IrTypeMapper.kt:158)
+	at org.jetbrains.kotlin.backend.jvm.mapping.IrTypeMapper.writeGenericType(IrTypeMapper.kt:41)
+	at org.jetbrains.kotlin.types.AbstractTypeMapper.mapClassType(AbstractTypeMapper.kt:198)
+	at org.jetbrains.kotlin.types.AbstractTypeMapper.mapType(AbstractTypeMapper.kt:89)
+	at org.jetbrains.kotlin.types.AbstractTypeMapper.mapType(AbstractTypeMapper.kt:53)
+	at org.jetbrains.kotlin.backend.jvm.mapping.IrTypeMapper.mapType(IrTypeMapper.kt:148)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen$typeMapper$1.mapType(ClassCodegen.kt:100)
+	at org.jetbrains.kotlin.backend.jvm.mapping.MethodSignatureMapper.writeParameterType(MethodSignatureMapper.kt:366)
+	at org.jetbrains.kotlin.backend.jvm.mapping.MethodSignatureMapper.writeParameter(MethodSignatureMapper.kt:341)
+	at org.jetbrains.kotlin.backend.jvm.mapping.MethodSignatureMapper.mapSignature(MethodSignatureMapper.kt:271)
+	at org.jetbrains.kotlin.backend.jvm.mapping.MethodSignatureMapper.mapSignature$default(MethodSignatureMapper.kt:231)
+	at org.jetbrains.kotlin.backend.jvm.mapping.MethodSignatureMapper.mapSignatureWithGeneric(MethodSignatureMapper.kt:229)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.doGenerate(FunctionCodegen.kt:54)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:46)
+	... 63 more
+
+
