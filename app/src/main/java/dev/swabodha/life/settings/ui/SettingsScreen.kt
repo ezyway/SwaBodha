@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import dev.swabodha.life.ui.components.AppHeader
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,35 +37,10 @@ fun SettingsScreen(
         ) {
 
             // ===== Header =====
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(
-                                headerTint,
-                                MaterialTheme.colorScheme.background
-                            )
-                        )
-                    )
-            ) {
-                Column(
-                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 32.dp)
-                ) {
-                    Text(
-                        text = "Settings",
-                        style = MaterialTheme.typography.headlineMedium
-                    )
-
-                    Spacer(Modifier.height(8.dp))
-
-                    Text(
-                        text = "Manage your app & preferences",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
+            AppHeader(
+                title = "Settings",
+                subtitle = "Manage your app, in your own way"
+            )
 
             // ===== Content Card =====
             Surface(

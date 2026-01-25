@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import dev.swabodha.life.ui.components.AppHeader
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,35 +26,10 @@ fun PrivacyPolicyScreen() {
         ) {
 
             // ===== Header =====
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        Brush.verticalGradient(
-                            listOf(
-                                headerTint,
-                                MaterialTheme.colorScheme.background
-                            )
-                        )
-                    )
-            ) {
-                Column(
-                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 32.dp)
-                ) {
-                    Text(
-                        text = "Privacy Policy",
-                        style = MaterialTheme.typography.headlineMedium
-                    )
-
-                    Spacer(Modifier.height(8.dp))
-
-                    Text(
-                        text = "How your data is handled inside the app",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
+            AppHeader(
+                title = "Privacy Policy",
+                subtitle = "How your data is handled inside the app"
+            )
 
             // ===== Content Card =====
             Surface(
