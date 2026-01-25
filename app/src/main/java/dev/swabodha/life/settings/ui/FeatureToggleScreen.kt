@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import dev.swabodha.life.features.FeatureRegistry
 import dev.swabodha.life.settings.data.FeatureTogglePrefs
+import dev.swabodha.life.ui.components.AppHeader
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,35 +36,10 @@ fun FeatureToggleScreen() {
         ) {
 
             // ===== Header =====
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        Brush.verticalGradient(
-                            listOf(
-                                headerTint,
-                                MaterialTheme.colorScheme.background
-                            )
-                        )
-                    )
-            ) {
-                Column(
-                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 32.dp)
-                ) {
-                    Text(
-                        text = "Enable / Disable Features",
-                        style = MaterialTheme.typography.headlineMedium
-                    )
-
-                    Spacer(Modifier.height(8.dp))
-
-                    Text(
-                        text = "Control which features appear in the app",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
+            AppHeader(
+                title = "Enable / Disable Features",
+                subtitle = "Control which features appear in the app"
+            )
 
             // ===== Content Card =====
             Surface(

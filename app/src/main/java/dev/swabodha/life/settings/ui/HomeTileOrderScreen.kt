@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import dev.swabodha.life.features.FeatureRegistry
 import dev.swabodha.life.settings.data.HomeTileOrderPrefs
+import dev.swabodha.life.ui.components.AppHeader
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import kotlin.math.roundToInt
@@ -51,35 +52,10 @@ fun ReorderHomeTilesScreen(
         ) {
 
             // ===== Header =====
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        Brush.verticalGradient(
-                            listOf(
-                                headerTint,
-                                MaterialTheme.colorScheme.background
-                            )
-                        )
-                    )
-            ) {
-                Column(
-                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 32.dp)
-                ) {
-                    Text(
-                        text = "Reorder home tiles",
-                        style = MaterialTheme.typography.headlineMedium
-                    )
-
-                    Spacer(Modifier.height(8.dp))
-
-                    Text(
-                        text = "Long-press and drag to change order",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
+            AppHeader(
+                title = "Reorder home tiles",
+                subtitle = "Long-press and drag to change order"
+            )
 
             // ===== Content Card =====
             Surface(
