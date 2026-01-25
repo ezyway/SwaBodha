@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import dev.swabodha.life.ui.components.FeatureHeader
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,35 +40,10 @@ fun WeightScreen(
         ) {
 
             /* ===== Header ===== */
-            Column(Modifier.padding(24.dp)) {
-                Icon(
-                    imageVector = Icons.Outlined.MonitorWeight,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(36.dp)
-                )
-
-                Spacer(Modifier.height(12.dp))
-
-                Text(
-                    text = "Weight tracking",
-                    style = MaterialTheme.typography.headlineSmall
-                )
-
-                Spacer(Modifier.height(4.dp))
-
-                Text(
-                    text = "Log your weight and monitor progress over time.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            HorizontalDivider(
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .align(Alignment.CenterHorizontally),
-                thickness = 1.dp
+            FeatureHeader(
+                title = "Weight tracking",
+                description = "Log your weight and monitor progress over time.",
+                icon = Icons.Outlined.MonitorWeight
             )
 
 
@@ -75,7 +51,7 @@ fun WeightScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp, vertical = 20.dp)
+                    .padding(horizontal = 24.dp)
             ) {
 
                 Text(

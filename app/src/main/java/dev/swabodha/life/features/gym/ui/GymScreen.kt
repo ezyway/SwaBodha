@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.swabodha.life.features.gym.data.entity.BodyPart
 import dev.swabodha.life.features.gym.data.entity.GymEntryEntity
+import dev.swabodha.life.ui.components.FeatureHeader
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -111,35 +112,11 @@ fun GymScreen(
 
             /* ===== Header ===== */
             item {
-                Column(Modifier.padding(24.dp)) {
-                    Icon(
-                        Icons.Outlined.FitnessCenter,
-                        null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(36.dp)
-                    )
-                    Spacer(Modifier.height(12.dp))
-                    Text("Gym log", style = MaterialTheme.typography.headlineSmall)
-                    Text(
-                        "Track the muscle groups you train.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    HorizontalDivider(
-                        modifier = Modifier.fillMaxWidth(0.8f),
-                        thickness = 1.dp
-                    )
-                }
+                FeatureHeader(
+                    title = "Gym log",
+                    description = "Track the muscle groups you train.",
+                    icon = Icons.Outlined.FitnessCenter
+                )
             }
 
             /* ===== Input Section (FULL BACKGROUND) ===== */

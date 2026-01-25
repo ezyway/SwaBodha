@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.swabodha.life.features.todo.data.entity.TodoEntity
+import dev.swabodha.life.ui.components.FeatureHeader
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -103,35 +104,11 @@ fun TodoScreen(
 
             /* ===== Header ===== */
             item {
-                Column(Modifier.padding(24.dp)) {
-                    Icon(
-                        Icons.AutoMirrored.Outlined.ListAlt,
-                        null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(36.dp)
-                    )
-                    Spacer(Modifier.height(12.dp))
-                    Text("Todos", style = MaterialTheme.typography.headlineSmall)
-                    Text(
-                        "Things you don’t want to forget.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    HorizontalDivider(
-                        modifier = Modifier.fillMaxWidth(0.8f),
-                        thickness = 1.dp
-                    )
-                }
+                FeatureHeader(
+                    title = "Todos",
+                    description = "Things you don’t want to forget.",
+                    icon = Icons.AutoMirrored.Outlined.ListAlt
+                )
             }
 
             /* ===== Add / Edit (FULL BACKGROUND) ===== */

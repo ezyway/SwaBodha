@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.swabodha.life.features.smoking.data.entity.SmokingEntryEntity
 import dev.swabodha.life.features.smoking.data.entity.SmokingSize
+import dev.swabodha.life.ui.components.FeatureHeader
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -51,48 +52,18 @@ fun SmokingScreen(
 
             // ===== Header =====
             item {
-                Column(Modifier.padding(24.dp)) {
-                    Icon(
-                        imageVector = Icons.Outlined.SmokingRooms,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(36.dp)
-                    )
-
-                    Spacer(Modifier.height(12.dp))
-
-                    Text(
-                        text = "Smoking log",
-                        style = MaterialTheme.typography.headlineSmall
-                    )
-
-                    Spacer(Modifier.height(4.dp))
-
-                    Text(
-                        text = "Log each smoke mindfully.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-
-            item {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    HorizontalDivider(
-                        modifier = Modifier.fillMaxWidth(0.8f),
-                        thickness = 1.dp
-                    )
-                }
+                FeatureHeader(
+                    title = "Smoking log",
+                    description = "Log each smoke mindfully.",
+                    icon = Icons.Outlined.SmokingRooms
+                )
             }
 
             // ===== Log Controls =====
             item {
                 Column(
                     modifier = Modifier
-                        .padding(horizontal = 24.dp, vertical = 16.dp)
+                        .padding(horizontal = 24.dp)
                         .fillMaxWidth()
                 ) {
 

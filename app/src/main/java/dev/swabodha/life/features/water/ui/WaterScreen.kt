@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.swabodha.life.core.reminders.ReminderScheduler
 import dev.swabodha.life.features.water.reminder.WaterReminder
+import dev.swabodha.life.ui.components.FeatureHeader
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,41 +54,11 @@ fun WaterScreen(
 
             // ===== Header =====
             item {
-                Column(Modifier.padding(24.dp)) {
-                    Icon(
-                        imageVector = Icons.Outlined.WaterDrop,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(36.dp)
-                    )
-
-                    Spacer(Modifier.height(12.dp))
-
-                    Text(
-                        text = "Water reminder",
-                        style = MaterialTheme.typography.headlineSmall
-                    )
-
-                    Spacer(Modifier.height(4.dp))
-
-                    Text(
-                        text = "Get gentle reminders to stay hydrated.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-
-            item {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    HorizontalDivider(
-                        modifier = Modifier.fillMaxWidth(0.8f),
-                        thickness = 1.dp
-                    )
-                }
+                FeatureHeader(
+                    title = "Water reminder",
+                    description = "Get gentle reminders to stay hydrated.",
+                    icon = Icons.Outlined.WaterDrop
+                )
             }
 
             // ===== Enable Switch =====
@@ -95,7 +66,7 @@ fun WaterScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 24.dp, vertical = 20.dp),
+                        .padding(horizontal = 24.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(Modifier.weight(1f)) {
