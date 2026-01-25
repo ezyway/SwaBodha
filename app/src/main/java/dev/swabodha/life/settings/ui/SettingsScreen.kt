@@ -25,7 +25,8 @@ import java.util.Calendar
 fun SettingsScreen(
     onNavigateToFeatureToggles: () -> Unit,
     onNavigateToReorderHomeTiles: () -> Unit,
-    onNavigateToPrivacyPolicy: () -> Unit
+    onNavigateToPrivacyPolicy: () -> Unit,
+    onNavigateToOssLicenses: () -> Unit
 ) {
     val headerTint = rememberTimeTint()
 
@@ -174,7 +175,8 @@ fun SettingsScreen(
                         SettingsItem(
                             icon = Icons.Outlined.Code,
                             title = "Open-source licenses",
-                            subtitle = "Libraries used"
+                            subtitle = "Libraries used",
+                            onClick = onNavigateToOssLicenses
                         )
 
                         SettingsItem(

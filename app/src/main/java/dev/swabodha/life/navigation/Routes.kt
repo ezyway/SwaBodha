@@ -6,7 +6,7 @@ object Routes {
 
     const val FEATURE_TOGGLES = "feature_toggles"
     const val REORDER_HOME_TILES = "reorder_home_tiles"
-
     const val PRIVACY_POLICY = "privacy_policy"
+    const val OSS_LICENSES = "oss_licenses"
 
 }
