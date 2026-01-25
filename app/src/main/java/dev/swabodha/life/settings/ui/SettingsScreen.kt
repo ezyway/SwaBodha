@@ -184,7 +184,7 @@ fun SettingsScreen(
                         SettingsItem(
                             icon = Icons.Outlined.Info,
                             title = "App version",
-                            subtitle = "Build and release info"
+                            subtitle = appVersionSubtitle()
                         )
 
                         SettingsItem(
