@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import dev.swabodha.life.features.FeatureRegistry
 import dev.swabodha.life.home.HomeScreen
 import dev.swabodha.life.settings.ui.FeatureToggleScreen
+import dev.swabodha.life.settings.ui.PrivacyPolicyScreen
 import dev.swabodha.life.settings.ui.ReorderHomeTilesScreen
 import dev.swabodha.life.settings.ui.SettingsScreen
 
@@ -35,6 +36,9 @@ fun AppNavHost() {
                 },
                 onNavigateToReorderHomeTiles = {
                     navController.navigate(Routes.REORDER_HOME_TILES)
+                },
+                onNavigateToPrivacyPolicy = {
+                    navController.navigate(Routes.PRIVACY_POLICY)
                 }
             )
         }
@@ -47,7 +51,9 @@ fun AppNavHost() {
             ReorderHomeTilesScreen(navController)
         }
 
-
+        composable(Routes.PRIVACY_POLICY) {
+            PrivacyPolicyScreen()
+        }
 
     }
 }

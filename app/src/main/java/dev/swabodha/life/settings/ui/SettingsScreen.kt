@@ -23,7 +23,8 @@ import java.util.Calendar
 @Composable
 fun SettingsScreen(
     onNavigateToFeatureToggles: () -> Unit,
-    onNavigateToReorderHomeTiles: () -> Unit
+    onNavigateToReorderHomeTiles: () -> Unit,
+    onNavigateToPrivacyPolicy: () -> Unit
 ) {
     val headerTint = rememberTimeTint()
 
@@ -190,7 +191,8 @@ fun SettingsScreen(
                         SettingsItem(
                             icon = Icons.Outlined.Policy,
                             title = "Privacy policy",
-                            subtitle = "How your data is handled"
+                            subtitle = "How your data is handled",
+                            onClick = onNavigateToPrivacyPolicy
                         )
 
                         SettingsItem(
