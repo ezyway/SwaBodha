@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
 import dev.swabodha.life.features.FeatureRegistry
 import dev.swabodha.life.home.HomeScreen
+import dev.swabodha.life.settings.ui.ContactScreen
 import dev.swabodha.life.settings.ui.FeatureToggleScreen
 import dev.swabodha.life.settings.ui.OssLicensesScreen
 import dev.swabodha.life.settings.ui.PrivacyPolicyScreen
@@ -43,6 +44,9 @@ fun AppNavHost() {
                 },
                 onNavigateToOssLicenses = {
                     navController.navigate(Routes.OSS_LICENSES)
+                },
+                onNavigateToContact = {
+                    navController.navigate(Routes.CONTACT)
                 }
             )
         }
@@ -62,6 +66,10 @@ fun AppNavHost() {
         composable(Routes.OSS_LICENSES) {
             OssLicensesScreen()
         }
+        composable(Routes.CONTACT) {
+            ContactScreen()
+        }
+
 
 
     }

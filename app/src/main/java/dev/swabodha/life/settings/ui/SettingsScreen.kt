@@ -26,7 +26,8 @@ fun SettingsScreen(
     onNavigateToFeatureToggles: () -> Unit,
     onNavigateToReorderHomeTiles: () -> Unit,
     onNavigateToPrivacyPolicy: () -> Unit,
-    onNavigateToOssLicenses: () -> Unit
+    onNavigateToOssLicenses: () -> Unit,
+    onNavigateToContact: () -> Unit
 ) {
     val headerTint = rememberTimeTint()
 
@@ -182,7 +183,8 @@ fun SettingsScreen(
                         SettingsItem(
                             icon = Icons.Outlined.Email,
                             title = "Contact & feedback",
-                            subtitle = "Report issues or suggest features"
+                            subtitle = "Report issues or suggest features",
+                            onClick = onNavigateToContact
                         )
                     }
 
