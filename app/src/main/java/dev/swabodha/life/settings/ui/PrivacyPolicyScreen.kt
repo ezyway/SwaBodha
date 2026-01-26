@@ -1,22 +1,33 @@
 package dev.swabodha.life.settings.ui
 
-import androidx.compose.foundation.background
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.halilibo.richtext.markdown.Markdown
+import com.halilibo.richtext.ui.RichText
 import dev.swabodha.life.ui.components.AppHeader
-import java.util.Calendar
+import dev.swabodha.life.util.fetchMarkdown
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PrivacyPolicyScreen() {
-    val headerTint = rememberTimeTint()
+
+    val markdownState = produceState<String?>(initialValue = null) {
+        value = try {
+            fetchMarkdown(
+                "https://raw.githubusercontent.com/ezyway/SwaBodha/refs/heads/dev/docs/Privacy%20Policy.md"
+            )
+        } catch (e: Exception) {
+            Log.e("PrivacyPolicy", "Markdown load failed", e)
+            "Failed to load privacy policy."
+        }
+    }
 
     Scaffold { padding ->
         Column(
@@ -44,45 +55,21 @@ fun PrivacyPolicyScreen() {
                         .verticalScroll(rememberScrollState())
                         .padding(horizontal = 24.dp, vertical = 20.dp)
                 ) {
-                    Text(
-                        text = "Your privacy matters.",
-                        style = MaterialTheme.typography.titleMedium
-                    )
 
-                    Spacer(Modifier.height(12.dp))
-
-                    Text(
-                        text = """
-                            • All data is stored locally on your device.
-                            • No data is collected without your consent.
-                            • Sync (if enabled) only transfers encrypted data.
-                            • No ads. No trackers.
-                        """.trimIndent(),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-
-                    Spacer(Modifier.height(16.dp))
-
-                    Text(
-                        text = "More detailed policy text can go here.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    when (val md = markdownState.value) {
+                        null -> {
+                            CircularProgressIndicator()
+                        }
+                        else -> {
+                            RichText {
+                                Markdown(md)
+                            }
+                        }
+                    }
 
                     Spacer(Modifier.height(24.dp))
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun rememberTimeTint(): Color {
-    val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-    return when (hour) {
-        in 5..11 -> MaterialTheme.colorScheme.primary.copy(alpha = 0.18f)
-        in 12..16 -> MaterialTheme.colorScheme.tertiary.copy(alpha = 0.16f)
-        in 17..21 -> MaterialTheme.colorScheme.secondary.copy(alpha = 0.16f)
-        else -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.12f)
     }
 }
