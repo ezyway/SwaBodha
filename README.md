@@ -4,8 +4,6 @@
 
 It is built with the belief that personal life data should remain **personal**, **structured**, and **under your control**.
 
----
-
 ## What SwaBodha Is
 
 SwaBodha acts like a **personal life dashboard**:
@@ -17,15 +15,11 @@ SwaBodha acts like a **personal life dashboard**:
 
 Everything is stored locally on your device first, with a foundation ready for secure multi-device sync in the future.
 
----
-
 ## Features Available Today
 - Home Dashboard
 - Water Reminder
 - Weight Tracking
 - Todo List with Reminders
-
----
 
 ## Core Principles
 
@@ -35,8 +29,6 @@ Everything is stored locally on your device first, with a foundation ready for s
 - **Simple by design**: Focused features, minimal clutter
 - **Built to scale**: New modules can be added cleanly
 
----
-
 ## What’s Coming Next
 
 - More health and habit tracking modules
@@ -45,14 +37,10 @@ Everything is stored locally on your device first, with a foundation ready for s
 - Optional secure cloud sync
 - UI polish and customization
 
----
-
 ## Status
 
 SwaBodha is actively evolving.  
 The foundation is intentionally strong so features can grow without compromising simplicity or privacy.
-
----
 
 You own your data.  
 You control your pace.
