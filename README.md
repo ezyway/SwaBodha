@@ -20,35 +20,10 @@ Everything is stored locally on your device first, with a foundation ready for s
 ---
 
 ## Features Available Today
-
-### Home Dashboard
-- Clean home screen with feature tiles
-- Features are modular and can be enabled or expanded over time
-
----
-
-### Water Reminder
-- Hourly water reminders
-- Choose reminder intervals (e.g. 60, 90, 120 minutes)
-- Enable or disable reminders anytime
-- Reminder settings are saved and restored automatically
-- Notifications work reliably in the background
-
----
-
-### Weight Tracking
-- Log weight entries manually
-- View your weight history instantly
-- Data persists across app restarts
-- Designed for future insights and trends
-
----
-
-### Todo List with Reminders
-- Add simple todo items
-- Optional date and time reminders for any task
-- Receive notifications exactly when needed
-- Todos are stored locally and remain available offline
+- Home Dashboard
+- Water Reminder
+- Weight Tracking
+- Todo List with Reminders
 
 ---
 
@@ -78,11 +53,6 @@ SwaBodha is actively evolving.
 The foundation is intentionally strong so features can grow without compromising simplicity or privacy.
 
 ---
-
-## Philosophy
-
-SwaBodha is not about productivity pressure.  
-It is about **awareness**, **consistency**, and **clarity** in daily life.
 
 You own your data.  
 You control your pace.
