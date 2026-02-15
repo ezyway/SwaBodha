@@ -48,6 +48,7 @@ fun AppNavHost() {
                 onNavigateToContact = {
                     navController.navigate(Routes.CONTACT)
                 }
+
             )
         }
 
@@ -69,8 +70,5 @@ fun AppNavHost() {
         composable(Routes.CONTACT) {
             ContactScreen()
         }
-
-
-
     }
 }

@@ -12,7 +12,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -21,6 +23,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import dev.swabodha.life.settings.data.ScreenshotProtectionPrefs
+import dev.swabodha.life.settings.data.ThemeMode
+import dev.swabodha.life.settings.data.ThemePrefs
 import dev.swabodha.life.ui.components.AppHeader
 import java.util.Calendar
 
@@ -31,11 +35,15 @@ fun SettingsScreen(
     onNavigateToReorderHomeTiles: () -> Unit,
     onNavigateToPrivacyPolicy: () -> Unit,
     onNavigateToOssLicenses: () -> Unit,
-    onNavigateToContact: () -> Unit,
-    onNavigateToTheme: () -> Unit
+    onNavigateToContact: () -> Unit
 ) {
     val headerTint = rememberTimeTint()
     val context = LocalContext.current
+    val themePrefs = remember { ThemePrefs.get(context) }
+    val currentTheme by themePrefs.mode.collectAsState()
+
+    var showThemeDialog by remember { mutableStateOf(false) }
+
     val screenshotPrefs = remember { ScreenshotProtectionPrefs(context) }
     val screenshotEnabled by screenshotPrefs.enabled.collectAsState()
 
@@ -162,8 +170,9 @@ fun SettingsScreen(
                         SettingsItem(
                             icon = Icons.Outlined.Palette,
                             title = "Theme",
-                            subtitle = "Light / Dark / System",
-                            onClick = onNavigateToTheme
+                            subtitle = currentTheme.name.lowercase()
+                                .replaceFirstChar { it.uppercase() },
+                            onClick = { showThemeDialog = true }
                         )
 
                         SettingsItem(
@@ -207,6 +216,44 @@ fun SettingsScreen(
             }
         }
     }
+    if (showThemeDialog) {
+        AlertDialog(
+            onDismissRequest = { showThemeDialog = false },
+            title = { Text("Choose Theme") },
+            text = {
+                Column {
+                    ThemeMode.values().forEach { mode ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+
+                            RadioButton(
+                                selected = currentTheme == mode,
+                                onClick = {
+                                    themePrefs.setMode(mode)
+                                    showThemeDialog = false
+                                }
+                            )
+
+                            Spacer(Modifier.width(12.dp))
+
+                            Text(
+                                text = mode.name.lowercase()
+                                    .replaceFirstChar { it.uppercase() },
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        }
+
+                    }
+                }
+            },
+            confirmButton = {}
+        )
+    }
+
 }
 
 @Composable

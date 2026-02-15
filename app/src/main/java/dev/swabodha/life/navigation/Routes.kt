@@ -9,4 +9,5 @@ object Routes {
     const val PRIVACY_POLICY = "privacy_policy"
     const val OSS_LICENSES = "oss_licenses"
     const val CONTACT = "contact"
+
 }

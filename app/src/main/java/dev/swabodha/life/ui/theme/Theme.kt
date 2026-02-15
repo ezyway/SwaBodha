@@ -14,41 +14,58 @@ import androidx.compose.ui.platform.LocalContext
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
-    tertiary = Pink80
+    tertiary = Pink80,
+
+    background = androidx.compose.ui.graphics.Color(0xFF000000),
+    surface = androidx.compose.ui.graphics.Color(0xFF000000),
+
+    onPrimary = androidx.compose.ui.graphics.Color.Black,
+    onSecondary = androidx.compose.ui.graphics.Color.White,
+    onTertiary = androidx.compose.ui.graphics.Color.Black,
+
+    onBackground = androidx.compose.ui.graphics.Color.White,
+    onSurface = androidx.compose.ui.graphics.Color.White
 )
+
 
 private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
 )
 
 @Composable
 fun SwaBodhaTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    themeMode: dev.swabodha.life.settings.data.ThemeMode,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    val context = LocalContext.current
+
+    val colorScheme = when (themeMode) {
+
+        dev.swabodha.life.settings.data.ThemeMode.SYSTEM -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (isSystemInDarkTheme())
+                    dynamicDarkColorScheme(context)
+                else
+                    dynamicLightColorScheme(context)
+            } else {
+                if (isSystemInDarkTheme())
+                    DarkColorScheme
+                else
+                    LightColorScheme
+            }
         }
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        dev.swabodha.life.settings.data.ThemeMode.DARK -> {
+            DarkColorScheme
+        }
+
+        dev.swabodha.life.settings.data.ThemeMode.LIGHT -> {
+            LightColorScheme
+        }
     }
+
 
     MaterialTheme(
         colorScheme = colorScheme,
