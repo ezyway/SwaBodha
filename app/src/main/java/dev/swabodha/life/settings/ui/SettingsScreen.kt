@@ -10,13 +10,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import dev.swabodha.life.settings.data.ScreenshotProtectionPrefs
 import dev.swabodha.life.ui.components.AppHeader
 import java.util.Calendar
 
@@ -27,9 +31,14 @@ fun SettingsScreen(
     onNavigateToReorderHomeTiles: () -> Unit,
     onNavigateToPrivacyPolicy: () -> Unit,
     onNavigateToOssLicenses: () -> Unit,
-    onNavigateToContact: () -> Unit
+    onNavigateToContact: () -> Unit,
+    onNavigateToTheme: () -> Unit
 ) {
     val headerTint = rememberTimeTint()
+    val context = LocalContext.current
+    val screenshotPrefs = remember { ScreenshotProtectionPrefs(context) }
+    val screenshotEnabled by screenshotPrefs.enabled.collectAsState()
+
 
     Scaffold { padding ->
         Column(
@@ -131,10 +140,14 @@ fun SettingsScreen(
                             subtitle = "Blur previews and notifications"
                         )
 
-                        SettingsItem(
+                        SettingsSwitchItem(
                             icon = Icons.Outlined.Block,
                             title = "Screenshot protection",
-                            subtitle = "Prevent screenshots"
+                            subtitle = "Prevent screenshots",
+                            checked = screenshotEnabled,
+                            onCheckedChange = {
+                                screenshotPrefs.setEnabled(it)
+                            }
                         )
 
                         SettingsItem(
@@ -149,7 +162,8 @@ fun SettingsScreen(
                         SettingsItem(
                             icon = Icons.Outlined.Palette,
                             title = "Theme",
-                            subtitle = "Light / Dark / System"
+                            subtitle = "Light / Dark / System",
+                            onClick = onNavigateToTheme
                         )
 
                         SettingsItem(
@@ -263,6 +277,52 @@ private fun SettingsItem(
         }
     }
 }
+
+@Composable
+private fun SettingsSwitchItem(
+    icon: ImageVector,
+    title: String,
+    subtitle: String? = null,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = title,
+            tint = MaterialTheme.colorScheme.primary
+        )
+
+        Spacer(Modifier.width(16.dp))
+
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyLarge
+            )
+
+            subtitle?.let {
+                Spacer(Modifier.height(2.dp))
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+
+        Switch(
+            checked = checked,
+            onCheckedChange = onCheckedChange
+        )
+    }
+}
+
 
 @Composable
 private fun rememberTimeTint(): Color {
