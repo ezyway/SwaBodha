@@ -1,5 +1,9 @@
 package dev.swabodha.life.settings.ui
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -157,11 +161,13 @@ fun SettingsScreen(
                                 screenshotPrefs.setEnabled(it)
                             }
                         )
-
                         SettingsItem(
                             icon = Icons.Outlined.DeleteForever,
-                            title = "Delete all local data",
-                            subtitle = "This cannot be undone",
+                            title = "Clear App Data",
+                            subtitle = "Opens Android system storage settings",
+                            onClick = {
+                                openAppSystemSettings(context)
+                            },
                             danger = true
                         )
                     }
@@ -369,6 +375,16 @@ private fun SettingsSwitchItem(
         )
     }
 }
+
+private fun openAppSystemSettings(context: Context) {
+    val intent = Intent(
+        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+        Uri.fromParts("package", context.packageName, null)
+    )
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    context.startActivity(intent)
+}
+
 
 
 @Composable
