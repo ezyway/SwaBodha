@@ -4,9 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -21,17 +18,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import dev.swabodha.life.settings.data.ScreenshotProtectionPrefs
 import dev.swabodha.life.settings.data.ThemeMode
 import dev.swabodha.life.settings.data.ThemePrefs
+import dev.swabodha.life.settings.ui.components.SettingsItem
+import dev.swabodha.life.settings.ui.components.SettingsSection
+import dev.swabodha.life.settings.ui.components.SettingsSwitchItem
+import dev.swabodha.life.settings.ui.components.ThemeDialog
 import dev.swabodha.life.ui.components.AppHeader
 import dev.swabodha.life.ui.components.rememberSnackbarController
 import dev.swabodha.life.ui.components.rememberTimeTint
-import kotlinx.coroutines.launch
-import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -239,147 +237,16 @@ fun SettingsScreen(
         }
     }
     if (showThemeDialog) {
-        AlertDialog(
-            onDismissRequest = { showThemeDialog = false },
-            title = { Text("Choose Theme") },
-            text = {
-                Column {
-                    ThemeMode.values().forEach { mode ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-
-                            RadioButton(
-                                selected = currentTheme == mode,
-                                onClick = {
-                                    themePrefs.setMode(mode)
-                                    showThemeDialog = false
-                                }
-                            )
-
-                            Spacer(Modifier.width(12.dp))
-
-                            Text(
-                                text = mode.name.lowercase()
-                                    .replaceFirstChar { it.uppercase() },
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                        }
-
-                    }
-                }
+        ThemeDialog(
+            currentTheme = currentTheme,
+            onSelect = {
+                themePrefs.setMode(it)
+                showThemeDialog = false
             },
-            confirmButton = {}
+            onDismiss = { showThemeDialog = false }
         )
     }
 
-}
-
-@Composable
-private fun SettingsSection(
-    title: String,
-    content: @Composable ColumnScope.() -> Unit
-) {
-    Spacer(Modifier.height(24.dp))
-
-    Text(
-        text = title.uppercase(),
-        modifier = Modifier.padding(horizontal = 24.dp),
-        style = MaterialTheme.typography.labelLarge,
-        color = MaterialTheme.colorScheme.primary
-    )
-
-    Spacer(Modifier.height(8.dp))
-
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        content = content
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun SettingsItem(
-    icon: ImageVector,
-    title: String,
-    subtitle: String? = null,
-    danger: Boolean = false,
-    onClick: () -> Unit = {}
-) {
-    ListItem(
-        headlineContent = {
-            Text(
-                text = title,
-                color = if (danger)
-                    MaterialTheme.colorScheme.error
-                else
-                    MaterialTheme.colorScheme.onSurface
-            )
-        },
-        supportingContent = subtitle?.let {
-            { Text(it, color = MaterialTheme.colorScheme.onSurfaceVariant) }
-        },
-        leadingContent = {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = if (danger)
-                    MaterialTheme.colorScheme.error
-                else
-                    MaterialTheme.colorScheme.primary
-            )
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp)
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = LocalIndication.current,
-                onClick = onClick
-            )
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun SettingsSwitchItem(
-    icon: ImageVector,
-    title: String,
-    subtitle: String? = null,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
-) {
-    ListItem(
-        headlineContent = { Text(title) },
-        supportingContent = subtitle?.let {
-            { Text(it) }
-        },
-        leadingContent = {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary
-            )
-        },
-        trailingContent = {
-            Switch(
-                checked = checked,
-                onCheckedChange = null
-            )
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp)
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = LocalIndication.current
-            ) {
-                onCheckedChange(!checked)
-            }
-    )
 }
 
 private fun openAppSystemSettings(context: Context) {
