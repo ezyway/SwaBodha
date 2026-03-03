@@ -52,6 +52,8 @@ fun SettingsScreen(
     val currentTheme by themePrefs.mode.collectAsState()
 
     var showThemeDialog by remember { mutableStateOf(false) }
+    var showPinSetup by remember { mutableStateOf(false) }
+    var showTimeoutDialog by remember { mutableStateOf(false) }
 
     val screenshotPrefs = remember { ScreenshotProtectionPrefs(context) }
     val screenshotEnabled by screenshotPrefs.enabled.collectAsState()
@@ -146,12 +148,33 @@ fun SettingsScreen(
                     }
 
                     SettingsSection("Privacy & Security") {
-                        SettingsItem(
+
+                        val appLockPrefs = remember { dev.swabodha.life.core.security.AppLockPrefs.get(context) }
+                        var lockEnabled by remember { mutableStateOf(appLockPrefs.isEnabled()) }
+
+                        SettingsSwitchItem(
                             icon = Icons.Outlined.Lock,
                             title = "App lock",
-                            subtitle = "PIN / biometrics",
-                            onClick = { snackbar.comingSoon() }
+                            subtitle = "PIN + biometrics",
+                            checked = lockEnabled,
+                            onCheckedChange = {
+                                if (it && !appLockPrefs.hasPin()) {
+                                    showPinSetup = true
+                                } else {
+                                    appLockPrefs.setEnabled(it)
+                                    lockEnabled = it
+                                }
+                            }
                         )
+
+                        if (lockEnabled) {
+                            SettingsItem(
+                                icon = Icons.Outlined.Schedule,
+                                title = "Lock timeout",
+                                subtitle = "${appLockPrefs.getTimeoutSeconds()} seconds",
+                                onClick = { showTimeoutDialog = true }
+                            )
+                        }
 
                         SettingsItem(
                             icon = Icons.Outlined.Security,
@@ -251,7 +274,17 @@ fun SettingsScreen(
             onDismiss = { showThemeDialog = false }
         )
     }
+    if (showPinSetup) {
+        dev.swabodha.life.core.security.ui.PinSetupScreen {
+            showPinSetup = false
+        }
+    }
 
+    if (showTimeoutDialog) {
+        dev.swabodha.life.core.security.ui.LockTimeoutDialog {
+            showTimeoutDialog = false
+        }
+    }
 }
 
 private fun openAppSystemSettings(context: Context) {

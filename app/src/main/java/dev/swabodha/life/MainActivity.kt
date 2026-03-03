@@ -22,18 +22,21 @@ import dev.swabodha.life.ui.theme.SwaBodhaTheme
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class MainActivity : ComponentActivity() {
+class MainActivity : androidx.fragment.app.FragmentActivity()   {
 
     private lateinit var themePrefs: ThemePrefs
     private lateinit var screenshotPrefs: ScreenshotProtectionPrefs
+    private lateinit var appLockManager: dev.swabodha.life.core.security.AppLockManager
 
     private var currentThemeMode by mutableStateOf(ThemeMode.SYSTEM)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val sensitivePrefs =
-            dev.swabodha.life.settings.data.SensitiveContentPrefs.get(this)
+        val sensitivePrefs = dev.swabodha.life.settings.data.SensitiveContentPrefs.get(this)
+
+        appLockManager = dev.swabodha.life.core.security.AppLockManager(this)
+        lifecycle.addObserver(appLockManager)
 
         lifecycleScope.launch {
             sensitivePrefs.enabled.collect { enabled ->
@@ -113,8 +116,17 @@ class MainActivity : ComponentActivity() {
                 controller.isAppearanceLightNavigationBars = !darkTheme
             }
 
+            val locked by appLockManager.locked.collectAsState()
+
             SwaBodhaTheme(themeMode = themeMode) {
-                AppNavHost()
+
+                if (locked) {
+                    dev.swabodha.life.core.security.ui.LockScreen(
+                        onUnlock = { appLockManager.unlock() }
+                    )
+                } else {
+                    AppNavHost()
+                }
             }
 
         }
