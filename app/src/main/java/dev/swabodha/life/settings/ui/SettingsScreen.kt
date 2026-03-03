@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import androidx.compose.foundation.background
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -21,8 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -30,7 +28,9 @@ import dev.swabodha.life.settings.data.ScreenshotProtectionPrefs
 import dev.swabodha.life.settings.data.ThemeMode
 import dev.swabodha.life.settings.data.ThemePrefs
 import dev.swabodha.life.ui.components.AppHeader
+import dev.swabodha.life.ui.components.rememberSnackbarController
 import dev.swabodha.life.ui.components.rememberTimeTint
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,8 +42,12 @@ fun SettingsScreen(
     onNavigateToOssLicenses: () -> Unit,
     onNavigateToContact: () -> Unit
 ) {
+
     val headerTint = rememberTimeTint()
     val context = LocalContext.current
+
+    val snackbar = rememberSnackbarController()
+
     val themePrefs = remember { ThemePrefs.get(context) }
     val currentTheme by themePrefs.mode.collectAsState()
 
@@ -53,7 +57,9 @@ fun SettingsScreen(
     val screenshotEnabled by screenshotPrefs.enabled.collectAsState()
 
 
-    Scaffold { padding ->
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbar.hostState) }
+    ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -99,31 +105,36 @@ fun SettingsScreen(
                         SettingsItem(
                             icon = Icons.Outlined.Person,
                             title = "Sign in / Sign out",
-                            subtitle = "Manage your account"
+                            subtitle = "Manage your account",
+                            onClick = { snackbar.comingSoon() }
                         )
 
                         SettingsItem(
                             icon = Icons.Outlined.Sync,
                             title = "Sync status",
-                            subtitle = "Last sync and errors"
+                            subtitle = "Last sync and errors",
+                            onClick = { snackbar.comingSoon() }
                         )
 
                         SettingsItem(
                             icon = Icons.Outlined.Schedule,
                             title = "Sync frequency",
-                            subtitle = "How often data is synced"
+                            subtitle = "How often data is synced",
+                            onClick = { snackbar.comingSoon() }
                         )
 
                         SettingsItem(
                             icon = Icons.Outlined.CloudSync,
                             title = "Sync now",
-                            subtitle = "Force a manual sync"
+                            subtitle = "Force a manual sync",
+                            onClick = { snackbar.comingSoon() }
                         )
 
                         SettingsItem(
                             icon = Icons.Outlined.Devices,
                             title = "Device list",
-                            subtitle = "Devices using this account"
+                            subtitle = "Devices using this account",
+                            onClick = { snackbar.comingSoon() }
                         )
 
                         SettingsItem(
@@ -138,19 +149,22 @@ fun SettingsScreen(
                         SettingsItem(
                             icon = Icons.Outlined.Lock,
                             title = "App lock",
-                            subtitle = "PIN / biometrics"
+                            subtitle = "PIN / biometrics",
+                            onClick = { snackbar.comingSoon() }
                         )
 
                         SettingsItem(
                             icon = Icons.Outlined.Security,
                             title = "Encrypted database",
-                            subtitle = "Local data protection"
+                            subtitle = "Local data protection",
+                            onClick = { snackbar.comingSoon() }
                         )
 
                         SettingsItem(
                             icon = Icons.Outlined.VisibilityOff,
                             title = "Hide sensitive content",
-                            subtitle = "Blur previews and notifications"
+                            subtitle = "Blur previews and notifications",
+                            onClick = { snackbar.comingSoon() }
                         )
 
                         SettingsSwitchItem(
@@ -185,7 +199,8 @@ fun SettingsScreen(
                         SettingsItem(
                             icon = Icons.Outlined.Dashboard,
                             title = "Home layout",
-                            subtitle = "Grid and spacing"
+                            subtitle = "Grid and spacing",
+                            onClick = { snackbar.comingSoon() }
                         )
                     }
 
@@ -268,17 +283,24 @@ private fun SettingsSection(
     title: String,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Spacer(Modifier.height(20.dp))
+    Spacer(Modifier.height(24.dp))
+
     Text(
-        text = title,
+        text = title.uppercase(),
         modifier = Modifier.padding(horizontal = 24.dp),
-        style = MaterialTheme.typography.titleMedium,
+        style = MaterialTheme.typography.labelLarge,
         color = MaterialTheme.colorScheme.primary
     )
+
     Spacer(Modifier.height(8.dp))
-    Column(content = content)
+
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        content = content
+    )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsItem(
     icon: ImageVector,
@@ -287,51 +309,41 @@ private fun SettingsItem(
     danger: Boolean = false,
     onClick: () -> Unit = {}
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() },
-                onClick = onClick
-            )
-
-            .padding(horizontal = 24.dp, vertical = 14.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = title,
-            tint = if (danger)
-                MaterialTheme.colorScheme.error
-            else
-                MaterialTheme.colorScheme.primary
-        )
-
-        Spacer(Modifier.width(16.dp))
-
-        Column(modifier = Modifier.weight(1f)) {
+    ListItem(
+        headlineContent = {
             Text(
                 text = title,
-                style = MaterialTheme.typography.bodyLarge,
                 color = if (danger)
                     MaterialTheme.colorScheme.error
                 else
                     MaterialTheme.colorScheme.onSurface
             )
-
-            subtitle?.let {
-                Spacer(Modifier.height(2.dp))
-                Text(
-                    text = it,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
-    }
+        },
+        supportingContent = subtitle?.let {
+            { Text(it, color = MaterialTheme.colorScheme.onSurfaceVariant) }
+        },
+        leadingContent = {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = if (danger)
+                    MaterialTheme.colorScheme.error
+                else
+                    MaterialTheme.colorScheme.primary
+            )
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = LocalIndication.current,
+                onClick = onClick
+            )
+    )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsSwitchItem(
     icon: ImageVector,
@@ -340,41 +352,34 @@ private fun SettingsSwitchItem(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit
 ) {
-    Row(
+    ListItem(
+        headlineContent = { Text(title) },
+        supportingContent = subtitle?.let {
+            { Text(it) }
+        },
+        leadingContent = {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
+            )
+        },
+        trailingContent = {
+            Switch(
+                checked = checked,
+                onCheckedChange = null
+            )
+        },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 24.dp, vertical = 14.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = title,
-            tint = MaterialTheme.colorScheme.primary
-        )
-
-        Spacer(Modifier.width(16.dp))
-
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.bodyLarge
-            )
-
-            subtitle?.let {
-                Spacer(Modifier.height(2.dp))
-                Text(
-                    text = it,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+            .padding(horizontal = 8.dp)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = LocalIndication.current
+            ) {
+                onCheckedChange(!checked)
             }
-        }
-
-        Switch(
-            checked = checked,
-            onCheckedChange = onCheckedChange
-        )
-    }
+    )
 }
 
 private fun openAppSystemSettings(context: Context) {
