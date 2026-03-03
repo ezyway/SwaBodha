@@ -11,6 +11,10 @@ object NotificationHelper {
     private const val CHANNEL_ID = "reminders"
 
     fun show(context: Context, title: String, message: String) {
+
+        val sensitivePrefs =
+            dev.swabodha.life.settings.data.SensitiveContentPrefs.get(context)
+
         val manager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -21,12 +25,29 @@ object NotificationHelper {
         )
         manager.createNotificationChannel(channel)
 
-        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle(title)
-            .setContentText(message)
-            .build()
+        val hideSensitive = sensitivePrefs.isEnabled()
 
-        manager.notify(title.hashCode(), notification)
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
+
+        if (hideSensitive) {
+            builder
+                .setContentTitle("Reminder")
+                .setContentText("Open app to view details")
+                .setPublicVersion(
+                    NotificationCompat.Builder(context, CHANNEL_ID)
+                        .setSmallIcon(R.drawable.ic_launcher_foreground)
+                        .setContentTitle("Reminder")
+                        .setContentText("Content hidden")
+                        .build()
+                )
+        } else {
+            builder
+                .setContentTitle(title)
+                .setContentText(message)
+        }
+
+        manager.notify(title.hashCode(), builder.build())
     }
 }

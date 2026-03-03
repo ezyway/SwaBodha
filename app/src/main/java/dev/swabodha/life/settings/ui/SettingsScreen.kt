@@ -16,12 +16,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import dev.swabodha.life.settings.data.ScreenshotProtectionPrefs
-import dev.swabodha.life.settings.data.ThemeMode
+import dev.swabodha.life.settings.data.SensitiveContentPrefs
 import dev.swabodha.life.settings.data.ThemePrefs
 import dev.swabodha.life.settings.ui.components.SettingsItem
 import dev.swabodha.life.settings.ui.components.SettingsSection
@@ -45,6 +44,9 @@ fun SettingsScreen(
     val context = LocalContext.current
 
     val snackbar = rememberSnackbarController()
+
+    val sensitivePrefs = remember { SensitiveContentPrefs.get(context) }
+    val hideSensitive by sensitivePrefs.enabled.collectAsState()
 
     val themePrefs = remember { ThemePrefs.get(context) }
     val currentTheme by themePrefs.mode.collectAsState()
@@ -158,11 +160,14 @@ fun SettingsScreen(
                             onClick = { snackbar.comingSoon() }
                         )
 
-                        SettingsItem(
+                        SettingsSwitchItem(
                             icon = Icons.Outlined.VisibilityOff,
                             title = "Hide sensitive content",
                             subtitle = "Blur previews and notifications",
-                            onClick = { snackbar.comingSoon() }
+                            checked = hideSensitive,
+                            onCheckedChange = {
+                                sensitivePrefs.setEnabled(it)
+                            }
                         )
 
                         SettingsSwitchItem(

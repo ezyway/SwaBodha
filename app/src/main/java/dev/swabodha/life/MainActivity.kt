@@ -32,6 +32,24 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val sensitivePrefs =
+            dev.swabodha.life.settings.data.SensitiveContentPrefs.get(this)
+
+        lifecycleScope.launch {
+            sensitivePrefs.enabled.collect { enabled ->
+                if (enabled) {
+                    window.setFlags(
+                        android.view.WindowManager.LayoutParams.FLAG_SECURE,
+                        android.view.WindowManager.LayoutParams.FLAG_SECURE
+                    )
+                } else {
+                    window.clearFlags(
+                        android.view.WindowManager.LayoutParams.FLAG_SECURE
+                    )
+                }
+            }
+        }
+
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         val controller = WindowInsetsControllerCompat(window, window.decorView)
@@ -75,7 +93,6 @@ class MainActivity : ComponentActivity() {
             val themePrefs = remember { ThemePrefs.get(this) }
             val themeMode by themePrefs.mode.collectAsState(initial = ThemeMode.SYSTEM)
 
-
             val darkTheme = when (themeMode) {
                 ThemeMode.LIGHT -> false
                 ThemeMode.DARK -> true
@@ -89,15 +106,12 @@ class MainActivity : ComponentActivity() {
                     activity.window,
                     activity.window.decorView
                 )
-
                 // Light status bar icons when background is light
                 controller.isAppearanceLightStatusBars = !darkTheme
 
                 // Light navigation bar icons when background is light
                 controller.isAppearanceLightNavigationBars = !darkTheme
-
             }
-
 
             SwaBodhaTheme(themeMode = themeMode) {
                 AppNavHost()
