@@ -1,17 +1,23 @@
 package dev.swabodha.life.core.security.ui
 
-
 import androidx.biometric.BiometricManager
-import androidx.biometric.BiometricPrompt
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.offset
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.FragmentActivity
 import dev.swabodha.life.core.security.AppLockPrefs
+import dev.swabodha.life.core.security.ui.components.AnimatedPinDots
+import dev.swabodha.life.core.security.ui.components.BiometricButton
+import dev.swabodha.life.core.security.ui.components.PinKeyboard
+import kotlinx.coroutines.delay
 
 @Composable
 fun LockScreen(
@@ -21,91 +27,134 @@ fun LockScreen(
     val context = LocalContext.current
     val prefs = remember { AppLockPrefs.get(context) }
 
+    val haptic = LocalHapticFeedback.current
+
     var pin by remember { mutableStateOf("") }
     var error by remember { mutableStateOf(false) }
 
-    Surface(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    val shake = remember { Animatable(0f) }
+    val dotsScale = remember { Animatable(1f) }
+
+    val biometricAvailable = remember {
+        BiometricManager.from(context)
+            .canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK) ==
+                BiometricManager.BIOMETRIC_SUCCESS
+    }
+
+    suspend fun successBounce() {
+        dotsScale.animateTo(1.2f, tween(120))
+        dotsScale.animateTo(1f, tween(120))
+    }
+
+    suspend fun shakeError() {
+        repeat(3) {
+            shake.animateTo(10f, tween(50))
+            shake.animateTo(-10f, tween(50))
+        }
+        shake.animateTo(0f)
+    }
+
+    Surface(Modifier.fillMaxSize()) {
+
         Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp)
+                .offset(x = shake.value.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Text("App Locked")
+            Spacer(Modifier.height(80.dp))
 
-            Spacer(Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = pin,
-                onValueChange = {
-                    if (it.length <= 6) pin = it
-                },
-                label = { Text("Enter PIN") },
-                isError = error
+            Text(
+                "App Locked",
+                style = MaterialTheme.typography.headlineMedium
             )
 
             Spacer(Modifier.height(16.dp))
 
-            Button(onClick = {
-                if (prefs.verifyPin(pin)) {
-                    error = false
-                    onUnlock()
-                } else {
-                    error = true
+            Text(
+                "Enter your PIN to continue",
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Spacer(Modifier.height(40.dp))
+
+            Box(
+                modifier = Modifier.graphicsLayer {
+                    scaleX = dotsScale.value
+                    scaleY = dotsScale.value
                 }
-            }) {
-                Text("Unlock")
+            ) {
+                AnimatedPinDots(pin.length)
             }
 
             Spacer(Modifier.height(16.dp))
 
-            BiometricButton(onSuccess = onUnlock)
-        }
-    }
-}
+            if (error) {
+                Text(
+                    "Incorrect PIN",
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
 
-@Composable
-private fun BiometricButton(onSuccess: () -> Unit) {
+            Spacer(Modifier.weight(1f))
 
-    val context = LocalContext.current
-    val activity = context as FragmentActivity
+            PinKeyboard(
+                onNumber = {
 
-    val manager = BiometricManager.from(context)
+                    if (pin.length < 6) {
+                        pin += it
 
-    if (manager.canAuthenticate(
-            BiometricManager.Authenticators.BIOMETRIC_STRONG
-        ) == BiometricManager.BIOMETRIC_SUCCESS
-    ) {
+                        // light tap feedback
+                        haptic.performHapticFeedback(
+                            androidx.compose.ui.hapticfeedback.HapticFeedbackType.TextHandleMove
+                        )
+                    }
 
-        Button(onClick = {
+                    error = false
+                },
+                onDelete = {
+                    if (pin.isNotEmpty()) {
+                        pin = pin.dropLast(1)
 
-            val prompt = BiometricPrompt(
-                activity,
-                activity.mainExecutor,
-                object : BiometricPrompt.AuthenticationCallback() {
-                    override fun onAuthenticationSucceeded(
-                        result: BiometricPrompt.AuthenticationResult
-                    ) {
-                        onSuccess()
+                        haptic.performHapticFeedback(
+                            androidx.compose.ui.hapticfeedback.HapticFeedbackType.TextHandleMove
+                        )
                     }
                 }
             )
 
-            val info = BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Unlock App")
-                .setSubtitle("Authenticate to continue")
-                .setAllowedAuthenticators(
-                    BiometricManager.Authenticators.BIOMETRIC_STRONG or
-                            BiometricManager.Authenticators.DEVICE_CREDENTIAL
+            Spacer(Modifier.height(20.dp))
+
+            if (biometricAvailable) {
+                BiometricButton(onSuccess = onUnlock)
+            }
+
+            Spacer(Modifier.height(20.dp))
+        }
+    }
+
+    LaunchedEffect(pin) {
+
+        if (pin.length == 6) {
+
+            // allow last dot animation
+            delay(150)
+
+            if (prefs.verifyPin(pin)) {
+                error = false
+                successBounce()
+                delay(120)
+                onUnlock()
+            } else {
+                error = true
+                pin = ""
+                haptic.performHapticFeedback(
+                    androidx.compose.ui.hapticfeedback.HapticFeedbackType.LongPress
                 )
-                .build()
-
-            prompt.authenticate(info)
-
-        }) {
-            Text("Use Biometrics")
+                shakeError()
+            }
         }
     }
 }

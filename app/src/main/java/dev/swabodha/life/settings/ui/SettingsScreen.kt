@@ -37,7 +37,8 @@ fun SettingsScreen(
     onNavigateToReorderHomeTiles: () -> Unit,
     onNavigateToPrivacyPolicy: () -> Unit,
     onNavigateToOssLicenses: () -> Unit,
-    onNavigateToContact: () -> Unit
+    onNavigateToContact: () -> Unit,
+    onNavigateToAppLock: () -> Unit
 ) {
 
     val headerTint = rememberTimeTint()
@@ -149,32 +150,12 @@ fun SettingsScreen(
 
                     SettingsSection("Privacy & Security") {
 
-                        val appLockPrefs = remember { dev.swabodha.life.core.security.AppLockPrefs.get(context) }
-                        var lockEnabled by remember { mutableStateOf(appLockPrefs.isEnabled()) }
-
-                        SettingsSwitchItem(
+                        SettingsItem(
                             icon = Icons.Outlined.Lock,
                             title = "App lock",
                             subtitle = "PIN + biometrics",
-                            checked = lockEnabled,
-                            onCheckedChange = {
-                                if (it && !appLockPrefs.hasPin()) {
-                                    showPinSetup = true
-                                } else {
-                                    appLockPrefs.setEnabled(it)
-                                    lockEnabled = it
-                                }
-                            }
+                            onClick = onNavigateToAppLock
                         )
-
-                        if (lockEnabled) {
-                            SettingsItem(
-                                icon = Icons.Outlined.Schedule,
-                                title = "Lock timeout",
-                                subtitle = "${appLockPrefs.getTimeoutSeconds()} seconds",
-                                onClick = { showTimeoutDialog = true }
-                            )
-                        }
 
                         SettingsItem(
                             icon = Icons.Outlined.Security,

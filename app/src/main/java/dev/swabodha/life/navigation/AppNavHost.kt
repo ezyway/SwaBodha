@@ -47,8 +47,10 @@ fun AppNavHost() {
                 },
                 onNavigateToContact = {
                     navController.navigate(Routes.CONTACT)
+                },
+                onNavigateToAppLock = {
+                    navController.navigate(Routes.APP_LOCK_SETTINGS)
                 }
-
             )
         }
 
@@ -69,6 +71,9 @@ fun AppNavHost() {
         }
         composable(Routes.CONTACT) {
             ContactScreen()
+        }
+        composable(Routes.APP_LOCK_SETTINGS) {
+            dev.swabodha.life.core.security.ui.AppLockSettingsScreen()
         }
     }
 }
