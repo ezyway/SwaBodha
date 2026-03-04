@@ -220,7 +220,7 @@ fun GymScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 16.dp),
+                        .padding(top = 24.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     HorizontalDivider(
@@ -235,7 +235,7 @@ fun GymScreen(
                 AnimatedVisibility(entries.isNotEmpty()) {
                     Column(
                         modifier = Modifier
-                            .padding(horizontal = 24.dp, vertical = 12.dp)
+                            .padding(horizontal = 24.dp, vertical = 24.dp)
                             .fillMaxWidth()
                     ) { Text("History", style = MaterialTheme.typography.titleMedium) }
                 }

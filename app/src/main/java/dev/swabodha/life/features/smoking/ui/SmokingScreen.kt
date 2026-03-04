@@ -204,7 +204,9 @@ fun SmokingScreen(
 
                 item {
                     Box(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 24.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         HorizontalDivider(
@@ -221,8 +223,8 @@ fun SmokingScreen(
                             .padding(
                                 start = 24.dp,
                                 end = 24.dp,
-                                top = 16.dp,
-                                bottom = 8.dp
+                                top = 24.dp,
+                                bottom = 16.dp
                             )
                     ) {
                         Text(

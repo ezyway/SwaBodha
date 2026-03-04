@@ -101,8 +101,11 @@ fun WeightScreen(
             }
 
             if (state.entries.isNotEmpty()) {
+
                 Box(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 24.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     HorizontalDivider(
