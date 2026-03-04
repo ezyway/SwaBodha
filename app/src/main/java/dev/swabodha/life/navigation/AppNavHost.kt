@@ -5,9 +5,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
+import dev.swabodha.life.core.security.ui.AppLockSettingsScreen
 import dev.swabodha.life.features.FeatureRegistry
 import dev.swabodha.life.home.HomeScreen
 import dev.swabodha.life.settings.ui.ContactScreen
+import dev.swabodha.life.settings.ui.EncryptedDatabaseScreen
 import dev.swabodha.life.settings.ui.FeatureToggleScreen
 import dev.swabodha.life.settings.ui.OssLicensesScreen
 import dev.swabodha.life.settings.ui.PrivacyPolicyScreen
@@ -50,6 +52,9 @@ fun AppNavHost() {
                 },
                 onNavigateToAppLock = {
                     navController.navigate(Routes.APP_LOCK_SETTINGS)
+                },
+                onNavigateToEncryptedDatabase = {
+                    navController.navigate(Routes.ENCRYPTED_DATABASE)
                 }
             )
         }
@@ -73,7 +78,10 @@ fun AppNavHost() {
             ContactScreen()
         }
         composable(Routes.APP_LOCK_SETTINGS) {
-            dev.swabodha.life.core.security.ui.AppLockSettingsScreen()
+            AppLockSettingsScreen()
+        }
+        composable(Routes.ENCRYPTED_DATABASE) {
+            EncryptedDatabaseScreen()
         }
     }
 }

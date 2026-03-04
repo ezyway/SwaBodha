@@ -38,7 +38,8 @@ fun SettingsScreen(
     onNavigateToPrivacyPolicy: () -> Unit,
     onNavigateToOssLicenses: () -> Unit,
     onNavigateToContact: () -> Unit,
-    onNavigateToAppLock: () -> Unit
+    onNavigateToAppLock: () -> Unit,
+    onNavigateToEncryptedDatabase: () -> Unit
 ) {
 
     val headerTint = rememberTimeTint()
@@ -161,7 +162,7 @@ fun SettingsScreen(
                             icon = Icons.Outlined.Security,
                             title = "Encrypted database",
                             subtitle = "Local data protection",
-                            onClick = { snackbar.comingSoon() }
+                            onClick = onNavigateToEncryptedDatabase
                         )
 
                         SettingsSwitchItem(

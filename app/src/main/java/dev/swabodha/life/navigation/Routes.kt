@@ -10,5 +10,6 @@ object Routes {
     const val OSS_LICENSES = "oss_licenses"
     const val CONTACT = "contact"
     const val APP_LOCK_SETTINGS = "app_lock_settings"
+    const val ENCRYPTED_DATABASE = "encrypted_database"
 
 }
